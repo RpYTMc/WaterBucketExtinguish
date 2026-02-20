@@ -8,11 +8,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class StatsManager {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path FILE =
             FabricLoader.getInstance().getConfigDir().resolve("waterbucketstats.json");
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger("WaterBucketStats");
 
     private static StatsData data = new StatsData();
 
@@ -26,7 +31,7 @@ public class StatsManager {
                 save();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to load stats file", e);
         }
     }
 
@@ -35,7 +40,7 @@ public class StatsManager {
         try {
             Files.writeString(FILE, GSON.toJson(data));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to save stats file", e);
         }
     }
 
