@@ -11,7 +11,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -22,6 +21,7 @@ import water.bucket.logic.Mode;
 import water.bucket.util.HotbarUtils;
 import water.bucket.logic.ExtinguishRules;
 import water.bucket.command.WaterBucketCommand;
+import water.bucket.stats.StatsManager;
 
 public class WaterBucketClient implements ClientModInitializer {
 
@@ -40,6 +40,8 @@ public class WaterBucketClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+
+		StatsManager.load();
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			WaterBucketCommand.register(dispatcher);
@@ -75,7 +77,6 @@ public class WaterBucketClient implements ClientModInitializer {
 			}
 
 			while (panicKey.wasPressed()) {
-
 				if (secondClickPending) return;
 
 				int currentSlot = client.player.getInventory().getSelectedSlot();
@@ -90,13 +91,41 @@ public class WaterBucketClient implements ClientModInitializer {
 						previousSlot = currentSlot;
 
 						client.player.getInventory().setSelectedSlot(bucketSlot);
+
+						var before = client.player.getMainHandStack().getItem();
+
 						client.interactionManager.interactItem(client.player, Hand.MAIN_HAND);
-						if (ModConfig.INSTANCE.enableSound) {
-							client.player.playSound(
-									SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(),
-									0.7f,
-									1.2f
-							);
+
+						var after = client.player.getMainHandStack().getItem();
+
+						// Placement (water bucket -> empty bucket)
+						if (before == Items.WATER_BUCKET && after == Items.BUCKET) {
+
+							StatsManager.incrementWeb();
+							StatsManager.incrementActivation();
+
+							if (ModConfig.INSTANCE.enableSound) {
+								client.player.playSound(
+										SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(),
+										0.7f,
+										1.2f
+								);
+							}
+						}
+
+						// Pickup (empty bucket -> water bucket)
+						if (before == Items.BUCKET && after == Items.WATER_BUCKET) {
+
+							StatsManager.incrementPickup();
+							StatsManager.incrementActivation();
+
+							if (ModConfig.INSTANCE.enableSound) {
+								client.player.playSound(
+										SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(),
+										0.7f,
+										1.2f
+								);
+							}
 						}
 
 						client.player.getInventory().setSelectedSlot(previousSlot);
@@ -107,26 +136,37 @@ public class WaterBucketClient implements ClientModInitializer {
 						previousSlot = currentSlot;
 
 						client.player.getInventory().setSelectedSlot(bucketSlot);
+
+						var before = client.player.getMainHandStack().getItem();
+
 						client.interactionManager.interactItem(client.player, Hand.MAIN_HAND);
 
-						if (ModConfig.INSTANCE.enableSound) {
-							client.player.playSound(
-									SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(),
-									0.7f,
-									1.2f
-							);
-						}
+						var after = client.player.getMainHandStack().getItem();
 
-						if (ModConfig.INSTANCE.enableActionBar) {
-							client.player.sendMessage(
-									Text.literal("Poof")
-											.formatted(Formatting.ITALIC, Formatting.GRAY),
-									true
-							);
-						}
+						if (before == Items.WATER_BUCKET && after == Items.BUCKET) {
 
-						clickTimer = 3;
-						secondClickPending = true;
+							StatsManager.incrementFire();
+							StatsManager.incrementActivation();
+
+							if (ModConfig.INSTANCE.enableSound) {
+								client.player.playSound(
+										SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(),
+										0.7f,
+										1.2f
+								);
+							}
+
+							if (ModConfig.INSTANCE.enableActionBar) {
+								client.player.sendMessage(
+										Text.literal("Poof")
+												.formatted(Formatting.ITALIC, Formatting.GRAY),
+										true
+								);
+							}
+
+							clickTimer = 3;
+							secondClickPending = true;
+						}
 					}
 
 					case PICKUP -> {
@@ -134,14 +174,16 @@ public class WaterBucketClient implements ClientModInitializer {
 						previousSlot = currentSlot;
 
 						client.player.getInventory().setSelectedSlot(bucketSlot);
+
+						var before = client.player.getMainHandStack().getItem();
+
 						client.interactionManager.interactItem(client.player, Hand.MAIN_HAND);
 
-						if (ModConfig.INSTANCE.enableSound) {
-							client.player.playSound(
-									SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(),
-									0.7f,
-									1.1f
-							);
+						var after = client.player.getMainHandStack().getItem();
+
+						if (before == Items.BUCKET && after == Items.WATER_BUCKET) {
+							StatsManager.incrementPickup();
+							StatsManager.incrementActivation();
 						}
 
 						client.player.getInventory().setSelectedSlot(previousSlot);
@@ -161,13 +203,23 @@ public class WaterBucketClient implements ClientModInitializer {
 				if (clickTimer <= 0) {
 
 					// Second click (pickup)
+					var before = client.player.getMainHandStack().getItem();
+
 					client.interactionManager.interactItem(client.player, Hand.MAIN_HAND);
-					if (ModConfig.INSTANCE.enableSound) {
-						client.player.playSound(
-								SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(),
-								0.6f,
-								1.0f
-						);
+
+					var after = client.player.getMainHandStack().getItem();
+
+					if (before == Items.BUCKET && after == Items.WATER_BUCKET) {
+						StatsManager.incrementPickup();
+						StatsManager.incrementActivation();
+
+						if (ModConfig.INSTANCE.enableSound) {
+							client.player.playSound(
+									SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(),
+									0.6f,
+									1.0f
+							);
+						}
 					}
 
 					if (previousSlot != -1) {

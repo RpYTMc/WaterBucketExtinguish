@@ -13,6 +13,8 @@ import net.minecraft.util.Formatting;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
 import water.bucket.config.ModConfig;
+import water.bucket.stats.StatsManager;
+import water.bucket.stats.StatsData;
 
 public class WaterBucketCommand {
 
@@ -23,6 +25,55 @@ public class WaterBucketCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
 
         dispatcher.register(literal("waterbucket")
+
+                // ===== STATS =====
+                .then(literal("stats")
+                        .executes(ctx -> {
+
+                            StatsData data = StatsManager.getData();
+
+                            send(ctx, Text.literal("=== Statistics ===")
+                                    .formatted(Formatting.YELLOW));
+
+                            send(ctx,
+                                    Text.literal("Total Activations: ")
+                                            .formatted(Formatting.GRAY)
+                                            .append(Text.literal(String.valueOf(data.totalActivations))
+                                                    .formatted(Formatting.AQUA)));
+
+                            send(ctx,
+                                    Text.literal("Fire Extinguishes: ")
+                                            .formatted(Formatting.GRAY)
+                                            .append(Text.literal(String.valueOf(data.fireExtinguishes))
+                                                    .formatted(Formatting.RED)));
+
+                            send(ctx,
+                                    Text.literal("Web Placements: ")
+                                            .formatted(Formatting.GRAY)
+                                            .append(Text.literal(String.valueOf(data.webPlacements))
+                                                    .formatted(Formatting.GREEN)));
+
+                            send(ctx,
+                                    Text.literal("Water Pickups: ")
+                                            .formatted(Formatting.GRAY)
+                                            .append(Text.literal(String.valueOf(data.waterPickups))
+                                                    .formatted(Formatting.BLUE)));
+
+                            return 1;
+                        })
+
+                        .then(literal("reset")
+                                .executes(ctx -> {
+
+                                    StatsManager.reset();
+
+                                    send(ctx, Text.literal("Statistics reset.")
+                                            .formatted(Formatting.YELLOW));
+
+                                    return 1;
+                                })
+                        )
+                )
 
                 // ===== HELP =====
                 .executes(ctx -> {
