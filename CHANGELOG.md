@@ -4,6 +4,30 @@ All notable changes to this project are documented here.
 
 This project follows semantic versioning.
 
+## [1.4.0] - 2026-02-20
+
+### Added
+- Persistent statistics tracking system
+- `/waterbucket stats` command
+- `/waterbucket stats reset` command
+- Accurate tracking for:
+    - Fire extinguishes
+    - Cobweb placements
+    - Water pickups
+    - Total successful actions
+- JSON-based stat storage (`waterbucketstats.json`)
+- Global stats tracking across all worlds and servers
+
+### Improved
+- Stats now increment only on successful actions
+- Eliminated duplicate stat counting edge cases
+- Improved action detection using item state validation
+- Replaced `printStackTrace()` with proper logging
+
+### Internal
+- Refactored action tracking logic for consistency
+- Stabilized stats architecture for future HUD integration
+
 ---
 
 ## [1.3.4] - 2026-02-20
