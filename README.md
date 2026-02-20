@@ -28,7 +28,7 @@ AI was used as a development assistant, not as an autonomous code generator.
 
 ##  Commands
 
-`/waterbucket` — Run this command in-game to view a list of all available commands
+`/waterbucket` — Run this command in-game to view a list of all available commands  
 `/waterbucket pitch`  
 `/waterbucket sound`  
 `/waterbucket actionbar`  
