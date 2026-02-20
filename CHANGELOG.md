@@ -4,6 +4,15 @@ All notable changes to this project are documented here.
 
 This project follows semantic versioning.
 
+## [1.4.1] - 2026-02-21
+
+### Fixed
+- Fire mode stats incorrectly counting pickup in certain edge cases
+- Improved activation tracking consistency
+
+### Internal
+- Refined stat trigger logic for clearer behavior separation
+
 ## [1.4.0] - 2026-02-20
 
 ### Added

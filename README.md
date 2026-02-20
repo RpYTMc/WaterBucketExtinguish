@@ -1,7 +1,7 @@
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21.11-brightgreen)
 ![Loader](https://img.shields.io/badge/Loader-Fabric-orange)
 ![License](https://img.shields.io/badge/License-MIT-blue)
-![Version](https://img.shields.io/badge/Version-1.3.4-blueviolet)
+![Version](https://img.shields.io/badge/Version-1.4.1-blueviolet)
 
 # Water Bucket Extinguish
 
