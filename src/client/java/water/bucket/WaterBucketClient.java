@@ -77,7 +77,7 @@ public class WaterBucketClient implements ClientModInitializer {
 			}
 
 			while (panicKey.wasPressed()) {
-				if (secondClickPending) return;
+				if (secondClickPending) continue;
 
 				int currentSlot = client.player.getInventory().getSelectedSlot();
 				int bucketSlot = HotbarUtils.findBucketSlot(client.player);
@@ -117,7 +117,10 @@ public class WaterBucketClient implements ClientModInitializer {
 						if (before == Items.BUCKET && after == Items.WATER_BUCKET) {
 
 							StatsManager.incrementPickup();
-							StatsManager.incrementActivation();
+
+							if (!secondClickPending) {
+								StatsManager.incrementActivation();
+							}
 
 							if (ModConfig.INSTANCE.enableSound) {
 								client.player.playSound(
@@ -210,8 +213,6 @@ public class WaterBucketClient implements ClientModInitializer {
 					var after = client.player.getMainHandStack().getItem();
 
 					if (before == Items.BUCKET && after == Items.WATER_BUCKET) {
-						StatsManager.incrementPickup();
-						StatsManager.incrementActivation();
 
 						if (ModConfig.INSTANCE.enableSound) {
 							client.player.playSound(
