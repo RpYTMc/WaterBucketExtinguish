@@ -39,6 +39,7 @@ AI was used as a development assistant, not as an autonomous code generator.
 `/waterbucket actionbar`  
 `/waterbucket nether`  
 `/waterbucket reload`  
+`/waterbucket stats`  
 `/waterbucket reset`
 
 ---
