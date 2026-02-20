@@ -7,7 +7,7 @@ A semi PvP-oriented Fabric mod designed to make use of water buckets in an easy 
 ## ⚠ Disclaimer
 
 This project was developed with the assistance of AI (ChatGPT 5.2).  
-The architecture, decisions, testing, iteration, and final integration were done manually by the project author.
+Architecture decisions, integration, testing, debugging, and feature design were handled manually by the project author.
 
 AI was used as a development assistant, not as an autonomous code generator.
 
@@ -17,20 +17,49 @@ AI was used as a development assistant, not as an autonomous code generator.
 
 - Smart fire extinguish logic
 - Cobweb escape support
-- Intelligent water pickup
+- Intelligent water pickup system
 - Config GUI (Cloth Config)
 - Client-side commands
-- Nether safety toggle
-- Sound + Actionbar feedback
+- Nether restriction toggle
+- Sound + Action Bar feedback
 - Modular rule system
 
 ---
 
 ##  Commands
 
-You can use this command ingame to view all the commands:
+`/waterbucket` — Run this command in-game to view a list of all available commands
+`/waterbucket pitch`  
+`/waterbucket sound`  
+`/waterbucket actionbar`  
+`/waterbucket nether`  
+`/waterbucket reload`  
+`/waterbucket reset`
 
-`/waterbucket`
+---
+
+##  Dependencies
+
+Required:
+- Fabric Loader
+- Fabric API
+
+Optional:
+- Cloth Config (for in-game configuration screen)
+- Mod Menu (for accessing config via Mods menu)
+
+---
+
+##  Minecraft Version
+
+- 1.21.11
+- Java 21+
+
+---
+
+##  License
+
+MIT License
 
 ---
 
