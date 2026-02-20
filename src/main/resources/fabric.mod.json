@@ -1,0 +1,42 @@
+{
+	"schemaVersion": 1,
+	"id": "waterbucket",
+	"version": "${version}",
+	"name": "Water Bucket Extinguish",
+	"description": "Semi PvP oriented mod designed to make use of the water buckets in an easy and intuitive way",
+	"authors": [
+		"RpYT",
+		"ChatGPT"
+	],
+	"contact": {
+		"homepage": "https://discord.gg/akNsGr8FXu",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/waterbucket/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"water.bucket.WaterBucket"
+		],
+		"client": [
+			"water.bucket.WaterBucketClient"
+		],
+		"modmenu": [
+			"water.bucket.integration.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"waterbucket.mixins.json",
+		{
+			"config": "waterbucket.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
