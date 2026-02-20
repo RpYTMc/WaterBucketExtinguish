@@ -1,6 +1,7 @@
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21.11-brightgreen)
 ![Loader](https://img.shields.io/badge/Loader-Fabric-orange)
 ![License](https://img.shields.io/badge/License-MIT-blue)
+![Latest Release](https://img.shields.io/github/v/release/RpYTMc/WaterBucketExtinguish)
 
 # Water Bucket Extinguish
 
@@ -47,7 +48,7 @@ AI was used as a development assistant, not as an autonomous code generator.
 
 ### Required
 - Fabric Loader
-- Fabric API 
+- Fabric API
 
 ### Optional
 - Cloth Config (in-game configuration screen)
