@@ -1,7 +1,6 @@
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21.11-brightgreen)
 ![Loader](https://img.shields.io/badge/Loader-Fabric-orange)
 ![License](https://img.shields.io/badge/License-MIT-blue)
-![Version](https://img.shields.io/badge/Version-1.4.1-blueviolet)
 
 # Water Bucket Extinguish
 
@@ -65,9 +64,3 @@ AI was used as a development assistant, not as an autonomous code generator.
 ##  License
 
 MIT License
-
----
-
-##  Version
-
-Current: **1.4.0**
