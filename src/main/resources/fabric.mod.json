@@ -9,10 +9,11 @@
 		"ChatGPT"
 	],
 	"contact": {
-		"homepage": "https://discord.gg/akNsGr8FXu",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/RpYTMc/WaterBucketExtinguish",
+		"issues": "https://github.com/RpYTMc/WaterBucketExtinguish/issues",
+		"sources": "https://github.com/RpYTMc/WaterBucketExtinguish"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/waterbucket/icon.png",
 	"environment": "*",
 	"entrypoints": {
