@@ -1,3 +1,8 @@
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21.11-brightgreen)
+![Loader](https://img.shields.io/badge/Loader-Fabric-orange)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Version](https://img.shields.io/badge/Version-1.3.4-blueviolet)
+
 # Water Bucket Extinguish
 
 A semi PvP-oriented Fabric mod designed to make use of water buckets in an easy and intuitive way.
@@ -40,13 +45,13 @@ AI was used as a development assistant, not as an autonomous code generator.
 
 ##  Dependencies
 
-Required:
+### Required
 - Fabric Loader
 - Fabric API
 
-Optional:
-- Cloth Config (for in-game configuration screen)
-- Mod Menu (for accessing config via Mods menu)
+### Optional
+- Cloth Config (in-game configuration screen)
+- Mod Menu (access config from Mods menu)
 
 ---
 
