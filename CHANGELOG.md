@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project are documented here.
 
 This project follows semantic versioning.
 
@@ -9,20 +9,22 @@ This project follows semantic versioning.
 ## [1.3.4] - 2026-02-20
 
 ### Added
+- Full client-side command system (`/waterbucket`)
+- Individual setting commands (pitch, sound, actionbar, nether)
+- Reload & reset commands
+- Improved boolean feedback formatting
 - MIT License
 - GitHub repository setup
-- IntelliJ Git integration
-- Improved README structure
+- Project versioning + changelog system
 
 ---
 
 ## [1.3.3]
 
 ### Added
-- Client-side command system (`/waterbucket`)
-- Reload & reset command
-- Boolean config toggles
-- Improved feedback formatting
+- Initial command framework
+- Boolean toggle command support
+- Config reload functionality
 
 ---
 
@@ -31,45 +33,74 @@ This project follows semantic versioning.
 ### Added
 - Mod Menu integration
 - Cloth Config GUI
-- Tooltip improvements
+- Improved tooltip structure
+- Organized config categories (Behavior, Feedback, Environment)
 
 ---
 
 ## [1.3.1]
 
 ### Added
-- Partial language file support
-- Proper keybinding category
+- Language file support (`en_us.json`)
+- Clean keybinding naming
+- Custom keybinding category
 
 ---
 
 ## [1.3.0]
 
 ### Added
-- Config system (JSON)
-- Nether restriction toggle
-- Sound + Action Bar toggles
+- JSON-based configuration system
+- Pitch threshold setting
+- Sound toggle
+- Action Bar toggle
+- Nether restriction option
+
+---
+
+## [1.2.1]
+
+### Improved
+- More reliable water pickup logic
+- Better slot switching behavior
 
 ---
 
 ## [1.2.0]
 
 ### Added
-- Water pickup logic anywhere
-- Smarter slot switching
-- Cobweb behavior improvements
+- Water pickup anywhere logic
+- Smarter hotbar bucket detection
+- Cobweb-specific behavior rules
+
+---
+
+## [1.1.2]
+
+### Improved
+- Timing adjustments for double-click logic
+- Reduced accidental misplacement
+
+---
+
+## [1.1.1]
+
+### Fixed
+- Keybinding issues
+- Initial logic inconsistencies
 
 ---
 
 ## [1.1.0]
 
 ### Added
-- Keybinding system
-- Double-click timing control
+- Custom keybinding system
+- Double-click extinguish logic
 
 ---
 
 ## [1.0.0]
 
-### Initial release
-- Basic auto extinguish logic
+### Initial Release
+- Basic fire extinguish functionality
+- Simple slot switching
