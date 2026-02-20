@@ -47,7 +47,7 @@ AI was used as a development assistant, not as an autonomous code generator.
 
 ### Required
 - Fabric Loader
-- Fabric API
+- Fabric API 
 
 ### Optional
 - Cloth Config (in-game configuration screen)
