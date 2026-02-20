@@ -58,7 +58,6 @@ AI was used as a development assistant, not as an autonomous code generator.
 
 ##  Minecraft Version
 
-- 1.21.11
 - Java 21+
 
 ---
@@ -71,4 +70,4 @@ MIT License
 
 ##  Version
 
-Current: **1.3.4**
+Current: **1.4.0**
