@@ -18,6 +18,9 @@ public class StatsManager {
             FabricLoader.getInstance().getConfigDir().resolve("waterbucketstats.json");
     private static final Logger LOGGER =
             LoggerFactory.getLogger("WaterBucketStats");
+    public static int getTotalActivations() {
+        return data.totalActivations;
+    }
 
     private static StatsData data = new StatsData();
 

@@ -106,6 +106,44 @@ public class ModConfigScreen {
 
         general.addEntry(environmentSub.build());
 
+        var hudSub = entryBuilder.startSubCategory(
+                Text.literal("HUD")
+        );
+
+        hudSub.setExpanded(false);
+        hudSub.setTooltip(Text.literal("Heads-up display settings."));
+
+// Enable HUD toggle
+        hudSub.add(
+                entryBuilder.startBooleanToggle(
+                                Text.literal("Enable HUD"),
+                                ModConfig.INSTANCE.enableHud
+                        )
+                        .setDefaultValue(true)
+                        .setTooltip(Text.literal("Show the bucket status and action feedback on screen."))
+                        .setSaveConsumer(value ->
+                                ModConfig.INSTANCE.enableHud = value
+                        )
+                        .build()
+        );
+
+// HUD Position selector
+        hudSub.add(
+                entryBuilder.startEnumSelector(
+                                Text.literal("HUD Position"),
+                                ModConfig.HudPosition.class,
+                                ModConfig.INSTANCE.hudPosition
+                        )
+                        .setDefaultValue(ModConfig.HudPosition.TOP_LEFT)
+                        .setTooltip(Text.literal("Change where the HUD appears on screen."))
+                        .setSaveConsumer(value ->
+                                ModConfig.INSTANCE.hudPosition = value
+                        )
+                        .build()
+        );
+
+        general.addEntry(hudSub.build());
+
         return builder.build();
     }
 }

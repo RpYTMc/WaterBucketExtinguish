@@ -11,6 +11,14 @@ import java.nio.file.Path;
 
 public class ModConfig {
 
+    public enum HudPosition {
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT
+    }
+    public HudPosition hudPosition = HudPosition.TOP_LEFT;
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_PATH =
             FabricLoader.getInstance().getConfigDir().resolve("waterbucketconfig.json");
@@ -21,11 +29,13 @@ public class ModConfig {
     public boolean enableSound = true;
     public boolean enableActionBar = true;
     public boolean disableInNether = true;
+    public boolean enableHud = true;
 
     public static final int DEFAULT_PITCH = 67;
     public static final boolean DEFAULT_SOUND = true;
     public static final boolean DEFAULT_ACTIONBAR = true;
     public static final boolean DEFAULT_DISABLE_NETHER = true;
+    public static final boolean DEFAULT_HUD = true;
 
     public static ModConfig load() {
         try {

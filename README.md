@@ -11,15 +11,16 @@
 </p>
 
 <p style="text-align:center;">
-  <img src="https://img.shields.io/badge/Minecraft-1.21.11-brightgreen" alt="Minecraft Version" />
-  <img src="https://img.shields.io/badge/Loader-Fabric-orange" alt="Loader" />
-  <img src="https://img.shields.io/badge/License-MIT-blue" alt="License" />
-  <img src="https://img.shields.io/github/v/release/RpYTMc/WaterBucketExtinguish?color=blueviolet" alt="Latest Release" />
-  <img src="https://img.shields.io/github/downloads/RpYTMc/WaterBucketExtinguish/total" alt="GitHub Downloads" />
+  <img src="https://img.shields.io/badge/Minecraft-1.21.11-brightgreen" />
+  <img src="https://img.shields.io/badge/Loader-Fabric-orange" />
+  <img src="https://img.shields.io/badge/License-MIT-blue" />
+  <img src="https://img.shields.io/github/v/release/RpYTMc/WaterBucketExtinguish?color=blueviolet" />
+  <img src="https://img.shields.io/github/downloads/RpYTMc/WaterBucketExtinguish/total" />
 </p>
+
 # Water Bucket Extinguish
 
-A semi PvP-oriented Fabric mod designed to make use of water buckets in an easy and intuitive way.
+A semi PvP-oriented Fabric utility mod that makes water bucket usage faster, smarter, and more intuitive.
 
 ---
 
@@ -34,27 +35,77 @@ AI was used as a development assistant, not as an autonomous code generator.
 
 ##  Features
 
-- Smart fire extinguish logic
+- Smart fire extinguish double-click logic
+- Faster fire re-pickup timing
 - Cobweb escape support
-- Intelligent water pickup system
-- Config GUI (Cloth Config)
-- Client-side commands
+- Intelligent water pickup detection
+- Bucket readiness detection (hotbar / inventory / none)
+- Clean in-game command system
+- Config GUI (Cloth Config support)
+- HUD position customization
+- Statistics tracking
 - Nether restriction toggle
 - Sound + Action Bar feedback
-- Modular rule system
+- Fully modular command architecture
+
+---
+
+##  HUD System
+
+The HUD can display bucket readiness:
+
+- ✔ Bucket Ready (in hotbar)
+- ⚠ Bucket in Inventory
+- ✖ No Bucket Found
+
+Position can be configured:
+- Top Left
+- Top Right
+- Bottom Left
+- Bottom Right
 
 ---
 
 ##  Commands
 
-`/waterbucket` — Run this command in-game to view a list of all available commands  
-`/waterbucket pitch`  
-`/waterbucket sound`  
-`/waterbucket actionbar`  
-`/waterbucket nether`  
-`/waterbucket reload`  
+### Base
+
+`/waterbucket`  
+Shows mod info and version.
+
+`/waterbucket help`  
+Shows full command list.
+
+---
+
+### Utility
+
+`/waterbucket bucket`  
+Check bucket readiness.
+
 `/waterbucket stats`  
-`/waterbucket reset`
+View statistics.
+
+`/waterbucket stats reset`  
+Reset statistics.
+
+`/waterbucket reload`  
+Reload configuration from file.
+
+---
+
+### Configuration
+
+`/waterbucket config pitch <value>`  
+`/waterbucket config pitch reset`
+
+`/waterbucket config sound <true|false>`  
+`/waterbucket config actionbar <true|false>`  
+`/waterbucket config nether <true|false>`  
+`/waterbucket config hud <true|false>`
+
+`/waterbucket config hudpos <top_left|top_right|bottom_left|bottom_right>`  
+`/waterbucket config hudpos reset`
 
 ---
 
@@ -65,13 +116,14 @@ AI was used as a development assistant, not as an autonomous code generator.
 - Fabric API
 
 ### Optional
-- Cloth Config (in-game configuration screen)
-- Mod Menu (access config from Mods menu)
+- Cloth Config
+- Mod Menu
 
 ---
 
-##  Minecraft Version
+##  Technical Notes
 
+- Client-side mod
 - Java 21+
 
 ---

@@ -4,6 +4,23 @@ All notable changes to this project are documented here.
 
 This project follows semantic versioning.
 
+## 1.4.2
+
+### Improvements
+- Major command system refactor
+- Modular config command structure
+- Cleaner help layout
+- Added bucket readiness command
+- Added HUD position setting
+- Improved fire double-click timing (faster)
+- Improved feedback system
+- Reduced command duplication internally
+
+### Technical
+- Cleaner internal command architecture
+- Reusable boolean/int setting builders
+- Improved maintainability
+
 ## [1.4.1] - 2026-02-21
 
 ### Fixed

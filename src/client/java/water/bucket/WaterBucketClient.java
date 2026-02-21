@@ -17,6 +17,7 @@ import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 
 import water.bucket.config.ModConfig;
+import water.bucket.hud.HudRenderer;
 import water.bucket.logic.Mode;
 import water.bucket.util.HotbarUtils;
 import water.bucket.logic.ExtinguishRules;
@@ -42,6 +43,8 @@ public class WaterBucketClient implements ClientModInitializer {
 	public void onInitializeClient() {
 
 		StatsManager.load();
+
+		HudRenderer.register();
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			WaterBucketCommand.register(dispatcher);
@@ -77,6 +80,7 @@ public class WaterBucketClient implements ClientModInitializer {
 			}
 
 			while (panicKey.wasPressed()) {
+
 				if (secondClickPending) continue;
 
 				int currentSlot = client.player.getInventory().getSelectedSlot();
@@ -167,7 +171,7 @@ public class WaterBucketClient implements ClientModInitializer {
 								);
 							}
 
-							clickTimer = 3;
+							clickTimer = 2;
 							secondClickPending = true;
 						}
 					}
