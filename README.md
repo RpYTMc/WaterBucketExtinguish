@@ -1,9 +1,22 @@
-![Minecraft](https://img.shields.io/badge/Minecraft-1.21.11-brightgreen)
-![Loader](https://img.shields.io/badge/Loader-Fabric-orange)
-![License](https://img.shields.io/badge/License-MIT-blue)
-![Latest Release](https://img.shields.io/github/v/release/RpYTMc/WaterBucketExtinguish?color=blueviolet)
-![Downloads](https://img.shields.io/github/downloads/RpYTMc/WaterBucketExtinguish/total)
+<p style="text-align:center;">
+  <a href="https://modrinth.com/mod/water-bucket-extinguish">
+    <img src="https://img.shields.io/badge/Download-Modrinth-1bd96a?style=for-the-badge&logo=modrinth&logoColor=white" alt="Download on Modrinth" />
+  </a>
+  <a href="https://github.com/RpYTMc/WaterBucketExtinguish/releases">
+    <img src="https://img.shields.io/badge/Source-GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="Source on GitHub" />
+  </a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/water-bucket-extinguish">
+    <img src="https://img.shields.io/badge/Download-CurseForge-f16436?style=for-the-badge&logo=curseforge&logoColor=white" alt="Download on CurseForge" />
+  </a>
+</p>
 
+<p style="text-align:center;">
+  <img src="https://img.shields.io/badge/Minecraft-1.21.11-brightgreen" alt="Minecraft Version" />
+  <img src="https://img.shields.io/badge/Loader-Fabric-orange" alt="Loader" />
+  <img src="https://img.shields.io/badge/License-MIT-blue" alt="License" />
+  <img src="https://img.shields.io/github/v/release/RpYTMc/WaterBucketExtinguish?color=blueviolet" alt="Latest Release" />
+  <img src="https://img.shields.io/github/downloads/RpYTMc/WaterBucketExtinguish/total" alt="GitHub Downloads" />
+</p>
 # Water Bucket Extinguish
 
 A semi PvP-oriented Fabric mod designed to make use of water buckets in an easy and intuitive way.
