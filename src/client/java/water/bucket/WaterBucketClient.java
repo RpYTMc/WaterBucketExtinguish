@@ -33,10 +33,7 @@ public class WaterBucketClient implements ClientModInitializer {
 	private boolean secondClickPending = false;
 	private int previousSlot = -1;
 
-	private static final KeyBinding.Category WATERBUCKET_CATEGORY =
-			KeyBinding.Category.create(
-					Identifier.of("waterbucket", "general")
-			);
+	private static final String WATERBUCKET_CATEGORY = "key.category.waterbucket";
 
 
 	@Override
@@ -83,7 +80,7 @@ public class WaterBucketClient implements ClientModInitializer {
 
 				if (secondClickPending) continue;
 
-				int currentSlot = client.player.getInventory().getSelectedSlot();
+				int currentSlot = client.player.getInventory().selectedSlot;
 				int bucketSlot = HotbarUtils.findBucketSlot(client.player);
 
 				Mode mode = ExtinguishRules.resolveMode(client);
@@ -94,7 +91,7 @@ public class WaterBucketClient implements ClientModInitializer {
 
 						previousSlot = currentSlot;
 
-						client.player.getInventory().setSelectedSlot(bucketSlot);
+						client.player.getInventory().selectedSlot =bucketSlot;
 
 						var before = client.player.getMainHandStack().getItem();
 
@@ -135,14 +132,14 @@ public class WaterBucketClient implements ClientModInitializer {
 							}
 						}
 
-						client.player.getInventory().setSelectedSlot(previousSlot);
+						client.player.getInventory().selectedSlot =previousSlot;
 					}
 
 					case FIRE -> {
 
 						previousSlot = currentSlot;
 
-						client.player.getInventory().setSelectedSlot(bucketSlot);
+						client.player.getInventory().selectedSlot =bucketSlot;
 
 						var before = client.player.getMainHandStack().getItem();
 
@@ -180,7 +177,7 @@ public class WaterBucketClient implements ClientModInitializer {
 
 						previousSlot = currentSlot;
 
-						client.player.getInventory().setSelectedSlot(bucketSlot);
+						client.player.getInventory().selectedSlot =bucketSlot;
 
 						var before = client.player.getMainHandStack().getItem();
 
@@ -193,7 +190,7 @@ public class WaterBucketClient implements ClientModInitializer {
 							StatsManager.incrementActivation();
 						}
 
-						client.player.getInventory().setSelectedSlot(previousSlot);
+						client.player.getInventory().selectedSlot =previousSlot;
 					}
 
 					case NONE -> {
@@ -228,7 +225,7 @@ public class WaterBucketClient implements ClientModInitializer {
 					}
 
 					if (previousSlot != -1) {
-						client.player.getInventory().setSelectedSlot(previousSlot);
+						client.player.getInventory().selectedSlot =previousSlot;
 						previousSlot = -1;
 					}
 
