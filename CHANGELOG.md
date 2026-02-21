@@ -4,7 +4,7 @@ All notable changes to this project are documented here.
 
 This project follows semantic versioning.
 
-## 1.4.2
+## [1.4.2] - 2026-02-21
 
 ### Improvements
 - Major command system refactor
