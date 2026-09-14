@@ -23,18 +23,21 @@ public class StatsManager {
     }
 
     private static StatsData data = new StatsData();
+    private static boolean dirty = false;
 
     // ===== INIT =====
     public static void load() {
         try {
             if (Files.exists(FILE)) {
                 String json = Files.readString(FILE);
-                data = GSON.fromJson(json, StatsData.class);
+                StatsData parsed = GSON.fromJson(json, StatsData.class);
+                data = (parsed != null) ? parsed : new StatsData();
             } else {
                 save();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.error("Failed to load stats file", e);
+            data = new StatsData();
         }
     }
 
@@ -48,24 +51,33 @@ public class StatsManager {
     }
 
     // ===== INCREMENT METHODS =====
+    // These only mark the data dirty; saveIfDirty() flushes to disk periodically
+    // and on game close, so we don't write a file on every single action.
     public static void incrementActivation() {
         data.totalActivations++;
-        save();
+        dirty = true;
     }
 
     public static void incrementFire() {
         data.fireExtinguishes++;
-        save();
+        dirty = true;
     }
 
     public static void incrementWeb() {
         data.webPlacements++;
-        save();
+        dirty = true;
     }
 
     public static void incrementPickup() {
         data.waterPickups++;
-        save();
+        dirty = true;
+    }
+
+    public static void saveIfDirty() {
+        if (dirty) {
+            save();
+            dirty = false;
+        }
     }
 
     // ===== GETTERS =====
@@ -77,5 +89,6 @@ public class StatsManager {
     public static void reset() {
         data = new StatsData();
         save();
+        dirty = false;
     }
 }

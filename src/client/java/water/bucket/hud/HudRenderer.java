@@ -9,6 +9,9 @@ import water.bucket.util.HotbarUtils;
 
 public class HudRenderer {
 
+    private static final int MARGIN = 5;
+    private static final int LINE_HEIGHT = 10;
+
     public static void register() {
         HudRenderCallback.EVENT.register((context, tickCounter) -> {
 
@@ -17,14 +20,16 @@ public class HudRenderer {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.player == null) return;
 
-            // ===== STATIC BUCKET STATUS =====
-            int hotbarSlot = HotbarUtils.findBucketSlot(client.player);
+            // Respect F1 (hidden HUD) and stay out of the way of the F3 debug screen.
+            if (client.options.hudHidden) return;
+            if (client.options.debugEnabled) return;
 
-            boolean hasHotbarBucket = hotbarSlot != -1;
+            boolean hasHotbarBucket = HotbarUtils.findBucketSlot(client.player) != -1;
             boolean hasInventoryBucket = false;
 
             for (int i = 0; i < client.player.getInventory().size(); i++) {
-                if (client.player.getInventory().getStack(i).isOf(Items.WATER_BUCKET)) {
+                var stack = client.player.getInventory().getStack(i);
+                if (stack.isOf(Items.WATER_BUCKET) || stack.isOf(Items.BUCKET)) {
                     hasInventoryBucket = true;
                     break;
                 }
@@ -35,49 +40,29 @@ public class HudRenderer {
 
             if (hasHotbarBucket) {
                 statusText = "✔ Bucket Ready";
-                statusColor = 0xFF55FF55; // green
-            }
-            else if (hasInventoryBucket) {
+                statusColor = 0xFF55FF55;
+            } else if (hasInventoryBucket) {
                 statusText = "⚠ Bucket in Inventory";
-                statusColor = 0xFFFFFF55; // yellow
-            }
-            else {
+                statusColor = 0xFFFFFF55;
+            } else {
                 statusText = "✖ No Bucket";
-                statusColor = 0xFFFF5555; // red
+                statusColor = 0xFFFF5555;
             }
 
             int screenWidth = client.getWindow().getScaledWidth();
             int screenHeight = client.getWindow().getScaledHeight();
+            int textWidth = client.textRenderer.getWidth(statusText);
 
-            int x=5;
-            int y=5;
+            int x = switch (ModConfig.INSTANCE.hudPosition) {
+                case TOP_LEFT, BOTTOM_LEFT -> MARGIN;
+                case TOP_RIGHT, BOTTOM_RIGHT -> screenWidth - textWidth - MARGIN;
+            };
+            int y = switch (ModConfig.INSTANCE.hudPosition) {
+                case TOP_LEFT, TOP_RIGHT -> MARGIN;
+                case BOTTOM_LEFT, BOTTOM_RIGHT -> screenHeight - MARGIN - LINE_HEIGHT;
+            };
 
-            switch (ModConfig.INSTANCE.hudPosition) {
-                case TOP_LEFT -> {
-                    x = 5;
-                    y = 5;
-                }
-                case TOP_RIGHT -> {
-                    x = screenWidth - client.textRenderer.getWidth(statusText) - 5;
-                    y = 5;
-                }
-                case BOTTOM_LEFT -> {
-                    x = 5;
-                    y = screenHeight - 15;
-                }
-                case BOTTOM_RIGHT -> {
-                    x = screenWidth - client.textRenderer.getWidth(statusText) - 5;
-                    y = screenHeight - 15;
-                }
-            }
-            context.drawText(
-                    client.textRenderer,
-                    statusText,
-                    x,
-                    y,
-                    statusColor,
-                    true
-            );
+            context.drawText(client.textRenderer, statusText, x, y, statusColor, true);
         });
     }
 }

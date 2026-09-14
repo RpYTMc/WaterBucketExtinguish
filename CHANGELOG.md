@@ -4,6 +4,26 @@ All notable changes to this project are documented here.
 
 This project follows semantic versioning.
 
+## [1.4.3] - 2026-09-14
+
+### Fixed
+- Fire mode left you holding the bucket when the water could not be placed (blocked spot, water already there). The previous item is now restored right away.
+- With both an empty and a water bucket in the hotbar the wrong one could be selected. Fire and cobweb now prefer the water bucket, refill prefers the empty one.
+- A pending fire pickup no longer carries over after disconnecting or changing worlds.
+- `/waterbucket config hudpos` with an invalid value now shows a message instead of an error.
+- HUD hides with F1 and while the F3 debug screen is open.
+- Failure hints now also cover Fire Resistance.
+
+### Changed
+- Statistics are written at most every 10 seconds and on exit instead of after every action.
+- Config and statistics files tolerate empty or corrupt content and fall back to defaults.
+- The mod is declared client-only, and Cloth Config is declared as a required dependency (the config screen always needed it).
+- Removed the `/waterbucket reload` command (it never actually reloaded anything).
+
+### Internal
+- Removed leftover template mixins and the "Hello Fabric world" log line.
+- Hotbar switching is documented as vanilla-equivalent (no manual slot packets), so anti-cheats see the same packets a normal player produces.
+
 ## [1.4.2] - 2026-02-21
 
 ### Improvements
