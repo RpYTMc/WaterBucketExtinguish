@@ -11,7 +11,7 @@
 </p>
 
 <p style="text-align:center;">
-  <img src="https://img.shields.io/badge/Minecraft-1.21.11-brightgreen" />
+  <img src="https://img.shields.io/badge/Minecraft-1.21.11%20%7C%201.20.1-brightgreen" />
   <img src="https://img.shields.io/badge/Loader-Fabric-orange" />
   <img src="https://img.shields.io/badge/License-MIT-blue" />
   <img src="https://img.shields.io/github/v/release/RpYTMc/WaterBucketExtinguish?color=blueviolet" />
@@ -20,53 +20,57 @@
 
 # Water Bucket Extinguish
 
-A semi PvP-oriented Fabric utility mod that makes water bucket usage faster, smarter, and more intuitive.
+A client-side Fabric PvP utility mod. One key switches to your water bucket, places it, picks it back up, and hands you back whatever you were holding.
+
+Works on vanilla servers. Nothing to install server-side.
 
 ---
 
-## ⚠ Disclaimer
+## Usage
 
-This project was developed with the assistance of AI (ChatGPT 5.2).  
-Architecture decisions, integration, testing, debugging, and feature design were handled manually by the project author.
+- **`]`** (configurable): the panic key. What it does depends on the situation:
+  - **On fire**, standing on the ground and looking down: places water at your feet, picks it up a tick later, switches back to your previous item.
+  - **Stuck in a cobweb**: places water so you can swim out. Press again to pick the water back up.
+  - **Holding an empty bucket** (not on fire): refills it from the water you are looking at.
+- **`P`** (configurable): opens the config screen.
+- If the key can't do anything, a short hint tells you why ("Look down to place water", "Not on fire", "No bucket in hotbar", ...).
 
-AI was used as a development assistant, not as an autonomous code generator.
+If you carry both a water bucket and an empty one, the mod picks the right one for the job.
 
 ---
 
-##  Features
+## How it behaves on servers
 
-- Smart fire extinguish double-click logic
-- Faster fire re-pickup timing
+The mod only calls the same client code vanilla uses for a right-click and a hotbar switch. It never fakes your position or rotation and never sends packets of its own, so servers and anti-cheats see the exact packet sequence a regular player produces.
+
+---
+
+## Features
+
+- Smart fire extinguish with automatic re-pickup
 - Cobweb escape support
-- Intelligent water pickup detection
-- Bucket readiness detection (hotbar / inventory / none)
-- Clean in-game command system
-- Config GUI (Cloth Config support)
-- HUD position customization
-- Statistics tracking
+- Bucket refill with one key
+- Bucket readiness HUD (hotbar / inventory / none), four corner positions
+- Config GUI (Cloth Config) and a full `/waterbucket` command set
+- Usage statistics
 - Nether restriction toggle
-- Sound + Action Bar feedback
-- Fully modular command architecture
+- Sound and action bar feedback
 
 ---
 
-##  HUD System
+## HUD
 
-The HUD can display bucket readiness:
+The HUD shows bucket readiness:
 
 - ✔ Bucket Ready (in hotbar)
 - ⚠ Bucket in Inventory
 - ✖ No Bucket Found
 
-Position can be configured:
-- Top Left
-- Top Right
-- Bottom Left
-- Bottom Right
+Positions: Top Left, Top Right, Bottom Left, Bottom Right. The HUD hides with F1 and while the F3 screen is open.
 
 ---
 
-##  Commands
+## Commands
 
 ### Base
 
@@ -74,9 +78,7 @@ Position can be configured:
 Shows mod info and version.
 
 `/waterbucket help`  
-Shows full command list.
-
----
+Shows the full command list.
 
 ### Utility
 
@@ -89,14 +91,9 @@ View statistics.
 `/waterbucket stats reset`  
 Reset statistics.
 
-`/waterbucket reload`  
-Reload configuration from file.
-
----
-
 ### Configuration
 
-`/waterbucket config pitch <value>`  
+`/waterbucket config pitch <0-90>`  
 `/waterbucket config pitch reset`
 
 `/waterbucket config sound <true|false>`  
@@ -107,27 +104,31 @@ Reload configuration from file.
 `/waterbucket config hudpos <top_left|top_right|bottom_left|bottom_right>`  
 `/waterbucket config hudpos reset`
 
+Settings are stored in `config/waterbucketconfig.json`, statistics in `config/waterbucketstats.json`.
+
 ---
 
-##  Dependencies
+## Dependencies
 
 ### Required
 - Fabric Loader
 - Fabric API
+- Cloth Config
 
 ### Optional
-- Cloth Config
-- Mod Menu
+- Mod Menu (adds a config button in the mod list)
 
 ---
 
-##  Technical Notes
+## Technical Notes
 
-- Client-side mod
-- Java 21+
+- Client-side only
+- `main` branch: Minecraft 1.21.11, Java 21
+- `1.20.1-port` branch: Minecraft 1.20.1, Java 17
+- Parts of the code were written with AI assistance. Design, testing and releases are by RpYT.
 
 ---
 
-##  License
+## License
 
 MIT License

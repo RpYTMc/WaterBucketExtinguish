@@ -56,14 +56,6 @@ public class WaterBucketCommand {
                 .then(literal("bucket")
                         .executes(WaterBucketCommand::showBucketStatus))
 
-                .then(literal("reload")
-                        .executes(ctx -> {
-                            ModConfig.INSTANCE.reload();
-                            feedback(ctx, Text.literal("Config reloaded.")
-                                    .formatted(Formatting.GREEN));
-                            return 1;
-                        }))
-
                 .then(literal("config")
                         .executes(WaterBucketCommand::showConfigHelp)
 
@@ -154,12 +146,6 @@ public class WaterBucketCommand {
         helpLine(ctx, "config hud", "Toggle HUD display");
         helpLine(ctx, "config hudpos", "Change HUD position");
 
-        panel(ctx, Text.literal(""));
-
-        panel(ctx, Text.literal("➤ Utility")
-                .formatted(Formatting.GREEN));
-        helpLine(ctx, "reload", "Reload configuration file");
-
         panel(ctx, Text.literal("━━━━━━━━━━━━━━━━━━━━━━━━")
                 .formatted(Formatting.DARK_GRAY));
 
@@ -206,7 +192,8 @@ public class WaterBucketCommand {
         boolean hasInventory = false;
 
         for (int i = 0; i < player.getInventory().size(); i++) {
-            if (player.getInventory().getStack(i).isOf(Items.WATER_BUCKET)) {
+            var stack = player.getInventory().getStack(i);
+            if (stack.isOf(Items.WATER_BUCKET) || stack.isOf(Items.BUCKET)) {
                 hasInventory = true;
                 break;
             }
@@ -334,8 +321,15 @@ public class WaterBucketCommand {
                         })
                         .executes(ctx -> {
                             String input = StringArgumentType.getString(ctx, "value").toUpperCase();
-                            ModConfig.INSTANCE.hudPosition =
-                                    ModConfig.HudPosition.valueOf(input);
+                            ModConfig.HudPosition position;
+                            try {
+                                position = ModConfig.HudPosition.valueOf(input);
+                            } catch (IllegalArgumentException e) {
+                                feedback(ctx, Text.literal("Unknown position. Use top_left, top_right, bottom_left or bottom_right.")
+                                        .formatted(Formatting.RED));
+                                return 0;
+                            }
+                            ModConfig.INSTANCE.hudPosition = position;
                             ModConfig.INSTANCE.save();
 
                             feedback(ctx, Text.literal("HUD Position set to ")

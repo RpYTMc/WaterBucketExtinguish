@@ -3,18 +3,15 @@ package water.bucket.logic;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.Items;
-import net.minecraft.world.World;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-import water.bucket.util.HotbarUtils;
 import water.bucket.config.ModConfig;
+import water.bucket.util.HotbarUtils;
 
 public class ExtinguishRules {
 
-    // =========================
-    // COBWEB DETECTION
-    // =========================
+    /** True if any block overlapping the player's bounding box is a cobweb. */
     public static boolean isInWeb(MinecraftClient client) {
 
         var box = client.player.getBoundingBox();
@@ -29,78 +26,47 @@ public class ExtinguishRules {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-
-                    if (client.world.getBlockState(new BlockPos(x, y, z))
-                            .isOf(Blocks.COBWEB)) {
+                    if (client.world.getBlockState(new BlockPos(x, y, z)).isOf(Blocks.COBWEB)) {
                         return true;
                     }
-
                 }
             }
         }
-
         return false;
     }
 
-    // =========================
-    // FIRE EXTINGUISH CONDITIONS
-    // =========================
-    public static boolean canActivate(MinecraftClient client) {
+    /** Fire-mode conditions, independent of which bucket is in the hotbar. */
+    public static boolean canExtinguish(MinecraftClient client) {
 
-        if (client.player == null || client.world == null)
-            return false;
+        var player = client.player;
 
-        // Must be on fire
-        if (!client.player.isOnFire())
-            return false;
+        if (!player.isOnFire()) return false;
+        if (player.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) return false;
+        if (!player.isOnGround()) return false;
 
-        // Must not have Fire Resistance
-        if (client.player.hasStatusEffect(StatusEffects.FIRE_RESISTANCE))
-            return false;
-
-        // Must be grounded
-        if (!client.player.isOnGround())
-            return false;
-
-        // Must look down enough
-        if (client.player.getPitch() < ModConfig.INSTANCE.pitchThreshold)
-            return false;
-
-        return true;
+        // Positive pitch = looking down; the water has to land at the feet.
+        return player.getPitch() >= ModConfig.INSTANCE.pitchThreshold;
     }
 
-    // =========================
-    // MODE RESOLVER (ENUM LOGIC)
-    // =========================
     public static Mode resolveMode(MinecraftClient client) {
 
-        if (ModConfig.INSTANCE.disableInNether &&
-                client.world.getRegistryKey() == World.NETHER) {
+        if (client.player == null || client.world == null) return Mode.NONE;
+
+        if (ModConfig.INSTANCE.disableInNether && client.world.getRegistryKey() == World.NETHER) {
             return Mode.NONE;
         }
 
-        if (client.player == null || client.world == null)
-            return Mode.NONE;
+        boolean hasWater = HotbarUtils.findWaterBucketSlot(client.player) != -1;
+        boolean hasEmpty = HotbarUtils.findEmptyBucketSlot(client.player) != -1;
 
-        int bucketSlot = HotbarUtils.findBucketSlot(client.player);
+        if (!hasWater && !hasEmpty) return Mode.NONE;
 
-        // No bucket at all
-        if (bucketSlot == -1)
-            return Mode.NONE;
+        // Cobweb overrides everything: water to get out, empty bucket to pick it back up.
+        if (isInWeb(client)) return Mode.COBWEB;
 
-        // Cobweb overrides everything
-        if (isInWeb(client))
-            return Mode.COBWEB;
+        if (hasWater && canExtinguish(client)) return Mode.FIRE;
 
-        // Fire extinguish mode
-        if (canActivate(client))
-            return Mode.FIRE;
-
-        // Pickup mode (only if empty bucket)
-        if (client.player.getInventory()
-                .getStack(bucketSlot)
-                .getItem() == Items.BUCKET)
-            return Mode.PICKUP;
+        if (hasEmpty) return Mode.PICKUP;
 
         return Mode.NONE;
     }
