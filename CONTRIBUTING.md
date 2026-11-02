@@ -8,6 +8,8 @@ There is one branch per Minecraft version, named `mc/` plus the Minecraft versio
 
 | Branch | Minecraft | Java | Notes |
 |---|---|---|---|
+| `mc/26.3` | 26.3 | 25 | Mojang names. Has the in-game test |
+| `mc/26.2` | 26.2 | 25 | Mojang names. Has the in-game test |
 | `mc/26.1` | 26.1, 26.1.1, 26.1.2 | 25 | Mojang names, no remapping (26.1 is unobfuscated). Has the in-game test |
 | `mc/1.21.11` | 1.21.11 | 21 | Yarn names |
 | `mc/1.20.1` | 1.20.1 | 17 | Yarn names |
