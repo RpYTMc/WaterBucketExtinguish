@@ -1,7 +1,8 @@
 package water.bucket.hud;
 
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 
 import water.bucket.config.ModConfig;
@@ -12,8 +13,12 @@ public class HudRenderer {
     private static final int MARGIN = 5;
     private static final int LINE_HEIGHT = 10;
 
+    private static final Identifier ELEMENT_ID =
+            Identifier.fromNamespaceAndPath("waterbucket", "bucket_status");
+
     public static void register() {
-        HudRenderCallback.EVENT.register((context, tickCounter) -> {
+        // Drawn after every vanilla HUD element, like the old HudRenderCallback was.
+        HudElementRegistry.addLast(ELEMENT_ID, (context, tickCounter) -> {
 
             if (!ModConfig.INSTANCE.enableHud) return;
 
@@ -62,7 +67,7 @@ public class HudRenderer {
                 case BOTTOM_LEFT, BOTTOM_RIGHT -> screenHeight - MARGIN - LINE_HEIGHT;
             };
 
-            context.drawString(client.font, statusText, x, y, statusColor, true);
+            context.text(client.font, statusText, x, y, statusColor, true);
         });
     }
 }

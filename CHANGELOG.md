@@ -6,6 +6,9 @@ This project follows semantic versioning.
 
 ## [1.4.3] - 2026-09-14
 
+### Added
+- Minecraft 26.1, 26.1.1 and 26.1.2 support (separate download, needs Java 25).
+
 ### Fixed
 - Fire mode left you holding the bucket when the water could not be placed (blocked spot, water already there). The previous item is now restored right away.
 - With both an empty and a water bucket in the hotbar the wrong one could be selected. Fire and cobweb now prefer the water bucket, refill prefers the empty one.

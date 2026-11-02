@@ -16,7 +16,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 import water.bucket.config.ModConfig;
 import water.bucket.stats.StatsData;

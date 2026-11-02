@@ -5,7 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -72,13 +72,13 @@ public class WaterBucketClient implements ClientModInitializer {
 		ClientCommandRegistrationCallback.EVENT.register(
 				(dispatcher, registryAccess) -> WaterBucketCommand.register(dispatcher));
 
-		configKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+		configKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.waterbucket.config",
 				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_P,
 				WATERBUCKET_CATEGORY));
 
-		panicKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+		panicKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.waterbucket.activate",
 				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_RIGHT_BRACKET,
@@ -211,12 +211,12 @@ public class WaterBucketClient implements ClientModInitializer {
 	 * Switches the held hotbar slot exactly like a vanilla scroll does: only the
 	 * client-side selection changes here.
 	 *
-	 * The game sends the UpdateSelectedSlot packet itself right before the next
-	 * interaction ({@code ClientPlayerInteractionManager#interactItem} calls
-	 * {@code syncSelectedSlot}) and again on the next client tick for the restore,
+	 * The game sends the set-carried-item packet itself right before the next
+	 * interaction ({@code MultiPlayerGameMode#useItem} calls
+	 * {@code ensureHasSentCarriedItem}) and again on the next client tick for the restore,
 	 * so the server sees the same packet sequence a normal player produces.
 	 *
-	 * Do NOT send {@code UpdateSelectedSlotC2SPacket} manually here: together with
+	 * Do NOT send {@code ServerboundSetCarriedItemPacket} manually here: together with
 	 * the vanilla sync that yields two identical slot packets in a row, which
 	 * anti-cheats (Grim, Frequency, ...) flag as impossible for a vanilla client.
 	 */
@@ -290,6 +290,6 @@ public class WaterBucketClient implements ClientModInitializer {
 
 	private static void sendActionBar(Minecraft client, String message) {
 		if (!ModConfig.INSTANCE.enableActionBar) return;
-		client.player.displayClientMessage(Component.literal(message).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
+		client.player.sendOverlayMessage(Component.literal(message).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
 	}
 }
