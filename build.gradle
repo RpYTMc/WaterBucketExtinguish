@@ -113,12 +113,12 @@ publishing {
 }
 
 // ---------------------------------------------------------------------------
-// Releasing (see README, "Releasing"): pushing a tag such as 1.4.3-mc1.21.11
-// runs .github/workflows/release.yml, which calls ./gradlew publishMods. That
+// Releasing (see CONTRIBUTING.md): pushing a tag such as 1.4.3-mc1.21.11 runs
+// .github/workflows/release.yml, which calls ./gradlew publishMods. That
 // uploads the jar to Modrinth, CurseForge and a GitHub release, with the
-// matching CHANGELOG.md section as the release notes. Without all three tokens
-// it is a dry run: nothing is uploaded and the requests are written to
-// build/publishMods instead.
+// matching CHANGELOG.md section as the release notes, and replaces the
+// Modrinth description with README.md. Without all three tokens it is a dry
+// run: nothing is uploaded and the requests are written to build/publishMods.
 // ---------------------------------------------------------------------------
 
 static String changelogSection(File changelog, String version) {
@@ -128,6 +128,28 @@ static String changelogSection(File changelog, String version) {
 		throw new GradleException("CHANGELOG.md has no '## [${version}]' section")
 	}
 	return matcher.group(1).trim()
+}
+
+// README.md as a store description: the parts between <!-- github-only --> and
+// <!-- /github-only --> are dropped, and <!-- listing-only ... --> comments are
+// unwrapped (the embedded video, which GitHub can't show).
+static String listingDescription(File readme) {
+	def text = readme.getText("UTF-8").normalize()
+	text = text.replaceAll(/(?s)<!-- github-only -->.*?<!-- \/github-only -->\n?/, "")
+	text = text.replaceAll(/(?s)<!-- listing-only\n(.*?)\n-->/, '$1')
+	return text.trim() + "\n"
+}
+
+tasks.register("listingDescription") {
+	group = "publishing"
+	description = "Writes the store description made from README.md to build/listing-description.md, for pasting into CurseForge."
+	def readme = file("README.md")
+	def output = layout.buildDirectory.file("listing-description.md")
+	inputs.file(readme)
+	outputs.file(output)
+	doLast {
+		output.get().asFile.setText(listingDescription(readme), "UTF-8")
+	}
 }
 
 def releaseVersion = project.mod_version.tokenize("+")[0]
@@ -148,6 +170,7 @@ publishMods {
 		projectId = "oyLBBIDr"
 		minecraftVersions.addAll(releaseMinecraftVersions)
 		environment = CLIENT_ONLY
+		projectDescription = providers.provider { listingDescription(file("README.md")) }
 		requires("fabric-api")
 		requires("cloth-config")
 		optional("modmenu")
@@ -170,7 +193,9 @@ publishMods {
 	github {
 		accessToken = providers.environmentVariable("GITHUB_TOKEN")
 		repository = "RpYTMc/WaterBucketExtinguish"
-		commitish = providers.environmentVariable("GITHUB_SHA").orElse("main")
+		// Only used when the tag doesn't exist yet; GitHub Actions always sets GITHUB_SHA.
+		commitish = providers.environmentVariable("GITHUB_SHA")
+				.orElse(providers.exec { commandLine("git", "rev-parse", "HEAD") }.standardOutput.asText.map { it.trim() })
 		tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse(project.mod_version.replace("+", "-"))
 	}
 }
