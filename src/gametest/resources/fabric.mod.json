@@ -1,0 +1,16 @@
+{
+	"schemaVersion": 1,
+	"id": "waterbucket-test",
+	"version": "1.0.0",
+	"name": "Water Bucket Extinguish client game test",
+	"environment": "client",
+	"entrypoints": {
+		"fabric-client-gametest": [
+			"water.bucket.test.WaterBucketClientGameTest"
+		]
+	},
+	"depends": {
+		"waterbucket": "*",
+		"fabric-client-gametest-api-v1": "*"
+	}
+}
