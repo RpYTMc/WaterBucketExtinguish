@@ -19,7 +19,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import org.lwjgl.glfw.GLFW;
 
 import water.bucket.command.WaterBucketCommand;
 import water.bucket.config.ModConfig;
@@ -74,14 +73,14 @@ public class WaterBucketClient implements ClientModInitializer {
 
 		configKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.waterbucket.config",
-				InputConstants.Type.KEYSYM,
-				GLFW.GLFW_KEY_P,
+				InputConstants.Type.KEYBOARD,
+				InputConstants.KEY_P,
 				WATERBUCKET_CATEGORY));
 
 		panicKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 				"key.waterbucket.activate",
-				InputConstants.Type.KEYSYM,
-				GLFW.GLFW_KEY_RIGHT_BRACKET,
+				InputConstants.Type.KEYBOARD,
+				InputConstants.KEY_RBRACKET,
 				WATERBUCKET_CATEGORY));
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);

@@ -11,7 +11,7 @@
 </p>
 
 <p style="text-align:center;">
-  <img src="https://img.shields.io/badge/Minecraft-26.2%20%7C%2026.1.x%20%7C%201.21.11%20%7C%201.20.1-brightgreen" />
+  <img src="https://img.shields.io/badge/Minecraft-26.3%20%7C%2026.2%20%7C%2026.1.x%20%7C%201.21.11%20%7C%201.20.1-brightgreen" />
   <img src="https://img.shields.io/badge/Loader-Fabric-orange" />
   <img src="https://img.shields.io/badge/License-MIT-blue" />
   <img src="https://img.shields.io/github/v/release/RpYTMc/WaterBucketExtinguish?color=blueviolet" />
@@ -126,6 +126,7 @@ Settings are stored in `config/waterbucketconfig.json`, statistics in `config/wa
 - `main` branch: Minecraft 1.21.11, Java 21
 - `mc26.1` branch: Minecraft 26.1, 26.1.1 and 26.1.2, Java 25 (one jar for all three)
 - `mc26.2` branch: Minecraft 26.2, Java 25
+- `mc26.3` branch: Minecraft 26.3, Java 25
 - `1.20.1-port` branch: Minecraft 1.20.1, Java 17
 - `./gradlew runClientGameTest` (26.x branches) starts a real client, creates a world and plays the fire, refill and cobweb cases automatically
 - Parts of the code were written with AI assistance. Design, testing and releases are by RpYT.

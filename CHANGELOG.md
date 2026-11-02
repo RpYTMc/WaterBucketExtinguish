@@ -7,7 +7,7 @@ This project follows semantic versioning.
 ## [1.4.3] - 2026-09-14
 
 ### Added
-- Minecraft 26.2 support (separate download, needs Java 25).
+- Minecraft 26.3 support (separate download, needs Java 25).
 
 ### Fixed
 - Fire mode left you holding the bucket when the water could not be placed (blocked spot, water already there). The previous item is now restored right away.
