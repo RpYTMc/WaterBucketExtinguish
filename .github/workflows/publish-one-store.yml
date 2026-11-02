@@ -1,0 +1,63 @@
+# Publishes an existing release tag to one store only. Use it when a release
+# partly worked, for example Modrinth and GitHub went through but CurseForge
+# failed: running the whole release again would upload duplicates.
+# Actions tab, "publish one store", Run workflow, then pick the tag and the store.
+# GitHub releases can't be redone here; delete the release and rerun the release run instead.
+
+name: publish one store
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag, for example 1.4.3-mc1.20.1
+        required: true
+      store:
+        description: Store to publish to
+        required: true
+        type: choice
+        options:
+          - curseforge
+          - modrinth
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout the tag
+        uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ inputs.tag }}
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+      - name: setup jdk
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+      - name: check the tag matches mod_version
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          expected="$(sed -n 's/^mod_version=//p' gradle.properties | tr -d '\r' | tr '+' '-')"
+          if [ "$TAG" != "$expected" ]; then
+            echo "::error::Tag $TAG does not match mod_version in gradle.properties (expected tag $expected)."
+            exit 1
+          fi
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+      - name: build and publish
+        run: |
+          case "$STORE" in
+            curseforge) task=publishCurseforge ;;
+            modrinth) task=publishModrinth ;;
+            *) echo "::error::Unknown store $STORE"; exit 1 ;;
+          esac
+          ./gradlew build "$task"
+        env:
+          STORE: ${{ inputs.store }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
