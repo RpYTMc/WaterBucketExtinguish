@@ -1,156 +1,121 @@
-<p style="text-align:center;">
-  <a href="https://modrinth.com/mod/water-bucket-extinguish">
-    <img src="https://img.shields.io/badge/Download-Modrinth-1bd96a?style=for-the-badge&logo=modrinth&logoColor=white" alt="Download on Modrinth" />
-  </a>
-  <a href="https://github.com/RpYTMc/WaterBucketExtinguish/releases">
-    <img src="https://img.shields.io/badge/Source-GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="Source on GitHub" />
-  </a>
-  <a href="https://www.curseforge.com/minecraft/mc-mods/water-bucket-extinguish">
-    <img src="https://img.shields.io/badge/Download-CurseForge-f16436?style=for-the-badge&logo=curseforge&logoColor=white" alt="Download on CurseForge" />
-  </a>
+<!-- github-only -->
+<p align="center">
+  <img src="https://cdn.modrinth.com/data/oyLBBIDr/df503606b7564309ee616b76a9c292526331dbf4.png" width="96" height="96" alt="Water Bucket Extinguish icon" />
 </p>
 
-<p style="text-align:center;">
-  <img src="https://img.shields.io/badge/Minecraft-26.2%20%7C%2026.1.x%20%7C%201.21.11%20%7C%201.20.1-brightgreen" />
-  <img src="https://img.shields.io/badge/Loader-Fabric-orange" />
-  <img src="https://img.shields.io/badge/License-MIT-blue" />
-  <img src="https://img.shields.io/github/v/release/RpYTMc/WaterBucketExtinguish?color=blueviolet" />
-  <img src="https://img.shields.io/github/downloads/RpYTMc/WaterBucketExtinguish/total" />
+<h1 align="center">Water Bucket Extinguish</h1>
+
+<p align="center">
+  One key puts out fire, frees you from cobwebs and refills your bucket,<br />
+  then hands your weapon straight back.
 </p>
 
-# Water Bucket Extinguish
+<p align="center">
+  <a href="https://modrinth.com/mod/water-bucket-extinguish"><img src="https://img.shields.io/badge/Modrinth-Download-1bd96a?style=for-the-badge&logo=modrinth&logoColor=white" alt="Download on Modrinth" /></a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/water-bucket-extinguish"><img src="https://img.shields.io/badge/CurseForge-Download-f16436?style=for-the-badge&logo=curseforge&logoColor=white" alt="Download on CurseForge" /></a>
+  <a href="https://github.com/RpYTMc/WaterBucketExtinguish/releases"><img src="https://img.shields.io/badge/GitHub-Releases-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub releases" /></a>
+</p>
 
-A client-side Fabric PvP utility mod. One key switches to your water bucket, places it, picks it back up, and hands you back whatever you were holding.
+<p align="center">
+  <img src="https://img.shields.io/modrinth/game-versions/water-bucket-extinguish?label=Minecraft&color=brightgreen" alt="Minecraft versions" />
+  <img src="https://img.shields.io/badge/loader-Fabric-dbd0b4" alt="Fabric" />
+  <img src="https://img.shields.io/modrinth/dt/water-bucket-extinguish?label=Modrinth&logo=modrinth&color=1bd96a" alt="Modrinth downloads" />
+  <img src="https://img.shields.io/curseforge/dt/1467538?label=CurseForge&logo=curseforge&color=f16436" alt="CurseForge downloads" />
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license" />
+</p>
+<!-- /github-only -->
 
-Works on vanilla servers. Nothing to install server-side.
+A client-side Fabric mod for PvP and survival. Press one key and the mod switches to your water bucket, uses it, picks the water back up and gives you back whatever you were holding. It works on any server, vanilla ones included, and needs nothing installed on the server.
 
----
+<!-- github-only -->
+<p align="center">
+  <a href="https://youtu.be/0nmwsDrVasU"><img src="https://img.youtube.com/vi/0nmwsDrVasU/maxresdefault.jpg" width="640" alt="Watch the demo video on YouTube" /></a><br />
+  <sub>Click the picture to watch the demo on YouTube.</sub>
+</p>
+<!-- /github-only -->
+<!-- listing-only
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/0nmwsDrVasU" frameborder="0" allowfullscreen></iframe>
+-->
 
-## Usage
+## Which version do I need?
 
-- **`]`** (configurable): the panic key. What it does depends on the situation:
-  - **On fire**, standing on the ground and looking down: places water at your feet, picks it up a tick later, switches back to your previous item.
-  - **Stuck in a cobweb**: places water so you can swim out. Press again to pick the water back up.
-  - **Holding an empty bucket** (not on fire): refills it from the water you are looking at.
-- **`P`** (configurable): opens the config screen.
-- If the key can't do anything, a short hint tells you why ("Look down to place water", "Not on fire", "No bucket in hotbar", ...).
+Download the file whose name ends with your Minecraft version:
 
-If you carry both a water bucket and an empty one, the mod picks the right one for the job.
+| Minecraft | File name ends with | Java |
+|---|---|---|
+| 26.1, 26.1.1, 26.1.2 | `+mc26.1.jar` | 25 |
+| 1.21.11 | `+mc1.21.11.jar` | 21 |
+| 1.20.1 | `+mc1.20.1.jar` | 17 |
 
----
+Every version needs [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrinth.com/mod/fabric-api) and [Cloth Config](https://modrinth.com/mod/cloth-config). [Mod Menu](https://modrinth.com/mod/modmenu) is optional and adds a settings button to the mod list. The official Minecraft launcher already comes with the right Java.
 
-## How it behaves on servers
+## How to use it
 
-The mod only calls the same client code vanilla uses for a right-click and a hotbar switch. It never fakes your position or rotation and never sends packets of its own, so servers and anti-cheats see the exact packet sequence a regular player produces.
+Press <kbd>]</kbd>. What it does depends on the situation:
 
----
+| Situation | What the key does |
+|---|---|
+| On fire, standing on the ground, looking down | Places water at your feet, picks it up again a moment later and switches back to your item |
+| Stuck in a cobweb | Places water to wash the cobweb away. Press again to pick the water back up |
+| Not on fire, with an empty bucket in the hotbar | Fills the empty bucket from the water you are looking at |
 
-## Features
+Press <kbd>P</kbd> to open the settings. You can change both keys in Options, Controls, Key Binds.
 
-- Smart fire extinguish with automatic re-pickup
-- Cobweb escape support
-- Bucket refill with one key
-- Bucket readiness HUD (hotbar / inventory / none), four corner positions
-- Config GUI (Cloth Config) and a full `/waterbucket` command set
-- Usage statistics
-- Nether restriction toggle
-- Sound and action bar feedback
+The bucket has to be in your hotbar. With a full and an empty bucket there, the mod uses the right one for the job. If the key can't do anything, a short message tells you why, for example "Look down to place water" or "No bucket in hotbar". By default the key does nothing in the Nether, where water can't be placed anyway.
 
----
+## Safe to use on servers
 
-## HUD
+The mod only switches your hotbar slot and right-clicks, through the same game code a normal key press uses. It never fakes your position or where you are looking, and it never sends network packets of its own. Servers and anti-cheats see the same thing they would see from a player doing it by hand. Some servers don't allow utility mods at all, so check the rules of the server you play on.
 
-The HUD shows bucket readiness:
+## Bucket HUD
 
-- ✔ Bucket Ready (in hotbar)
-- ⚠ Bucket in Inventory
-- ✖ No Bucket Found
+A small label in a corner of the screen shows whether a bucket is ready:
 
-Positions: Top Left, Top Right, Bottom Left, Bottom Right. The HUD hides with F1 and while the F3 screen is open.
+| HUD | Meaning |
+|---|---|
+| <img src="https://cdn.modrinth.com/data/cached_images/a95c89823bb1640213a3a8c1bde4568c1f8a0acf.png" alt="Bucket Ready" /> | A bucket is in your hotbar |
+| <img src="https://cdn.modrinth.com/data/cached_images/8719112b74f42e1cbade2ad3afdf9e956f8cdc98.png" alt="Bucket in Inventory" /> | A bucket is in your inventory, move it to the hotbar |
+| <img src="https://cdn.modrinth.com/data/cached_images/562d7218e8e9608ceca7173ac281de7ea0788a08.png" alt="No Bucket" /> | You have no bucket |
 
----
+You can move it to any corner or turn it off. It hides with F1 and while the F3 screen is open.
 
-## Commands
+## Settings and commands
 
-### Base
+<p align="center">
+  <img src="https://cdn.modrinth.com/data/oyLBBIDr/images/6e19bac39937a9cf7551deb733f91455a0cb3aa3.png" width="640" alt="The settings screen" />
+</p>
 
-`/waterbucket`  
-Shows mod info and version.
+Every setting can also be changed with a command:
 
-`/waterbucket help`  
-Shows the full command list.
+<details>
+<summary>All <code>/waterbucket</code> commands</summary>
 
-### Utility
+| Command | What it does |
+|---|---|
+| `/waterbucket` | Shows the mod version |
+| `/waterbucket help` | Lists all commands |
+| `/waterbucket bucket` | Tells you whether a bucket is ready |
+| `/waterbucket stats` | Shows how often the mod has helped you |
+| `/waterbucket stats reset` | Resets the statistics |
+| `/waterbucket config pitch <0-90>` | How far down you must look for the fire case (default 67) |
+| `/waterbucket config sound <true/false>` | Sound when the key does something |
+| `/waterbucket config actionbar <true/false>` | Short messages above the hotbar |
+| `/waterbucket config nether <true/false>` | Turn the key off in the Nether |
+| `/waterbucket config hud <true/false>` | Show the bucket HUD |
+| `/waterbucket config hudpos <corner>` | Where the HUD sits: `top_left`, `top_right`, `bottom_left` or `bottom_right` |
 
-`/waterbucket bucket`  
-Check bucket readiness.
+Add `reset` to any setting to restore its default, for example `/waterbucket config pitch reset`.
 
-`/waterbucket stats`  
-View statistics.
+</details>
 
-`/waterbucket stats reset`  
-Reset statistics.
+Settings are saved in `config/waterbucketconfig.json` and statistics in `config/waterbucketstats.json`.
 
-### Configuration
+## Links
 
-`/waterbucket config pitch <0-90>`  
-`/waterbucket config pitch reset`
-
-`/waterbucket config sound <true|false>`  
-`/waterbucket config actionbar <true|false>`  
-`/waterbucket config nether <true|false>`  
-`/waterbucket config hud <true|false>`
-
-`/waterbucket config hudpos <top_left|top_right|bottom_left|bottom_right>`  
-`/waterbucket config hudpos reset`
-
-Settings are stored in `config/waterbucketconfig.json`, statistics in `config/waterbucketstats.json`.
-
----
-
-## Dependencies
-
-### Required
-- Fabric Loader
-- Fabric API
-- Cloth Config
-
-### Optional
-- Mod Menu (adds a config button in the mod list)
-
----
-
-## Technical Notes
-
-- Client-side only
-- `main` branch: Minecraft 1.21.11, Java 21
-- `mc26.1` branch: Minecraft 26.1, 26.1.1 and 26.1.2, Java 25 (one jar for all three)
-- `mc26.2` branch: Minecraft 26.2, Java 25
-- `1.20.1-port` branch: Minecraft 1.20.1, Java 17
-- `./gradlew runClientGameTest` (26.x branches) starts a real client, creates a world and plays the fire, refill and cobweb cases automatically
-- Parts of the code were written with AI assistance. Design, testing and releases are by RpYT.
-
----
-
-## Releasing
-
-Releases are published by GitHub Actions when a version tag is pushed.
-
-One-time setup, in the repository settings under Secrets and variables, Actions:
-
-- `MODRINTH_TOKEN`: a Modrinth personal access token (modrinth.com/settings/pats) with the scopes Create versions, Read versions and Write versions.
-- `CURSEFORGE_TOKEN`: a CurseForge API token (legacy.curseforge.com/account/api-tokens).
-
-For each release, on each branch you release from:
-
-1. Set `mod_version` in `gradle.properties` and add a `## [x.y.z]` section to `CHANGELOG.md`. That section becomes the release notes.
-2. Commit and push the branch.
-3. Push a tag equal to `mod_version` with `+` replaced by `-`, for example `git tag 1.4.3-mc1.21.11` then `git push origin 1.4.3-mc1.21.11`.
-
-The `release` workflow builds the jar and uploads it to Modrinth, CurseForge and a GitHub release. The Minecraft versions each upload is listed for come from `publish_minecraft_versions` in `gradle.properties`. Starting the workflow by hand from the Actions tab, or running `./gradlew publishMods` without the tokens, is a dry run that uploads nothing.
-
----
+- [Changelog](https://github.com/RpYTMc/WaterBucketExtinguish/blob/HEAD/CHANGELOG.md)
+- [Report a bug or suggest a feature](https://github.com/RpYTMc/WaterBucketExtinguish/issues)
+- [Source code](https://github.com/RpYTMc/WaterBucketExtinguish), with build and release notes in [CONTRIBUTING.md](https://github.com/RpYTMc/WaterBucketExtinguish/blob/HEAD/CONTRIBUTING.md)
 
 ## License
 
-MIT License
+[MIT](https://github.com/RpYTMc/WaterBucketExtinguish/blob/HEAD/LICENSE). Made by RpYT.
