@@ -1,6 +1,7 @@
 plugins {
 	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
 	id 'maven-publish'
+	id 'me.modmuss50.mod-publish-plugin' version '2.2.1'
 }
 
 version = project.mod_version
@@ -92,5 +93,68 @@ publishing {
 		// Notice: This block does NOT have the same function as the block in the top level.
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Releasing (see README, "Releasing"): pushing a tag such as 1.4.3-mc1.21.11
+// runs .github/workflows/release.yml, which calls ./gradlew publishMods. That
+// uploads the jar to Modrinth, CurseForge and a GitHub release, with the
+// matching CHANGELOG.md section as the release notes. Without all three tokens
+// it is a dry run: nothing is uploaded and the requests are written to
+// build/publishMods instead.
+// ---------------------------------------------------------------------------
+
+static String changelogSection(File changelog, String version) {
+	def text = changelog.getText("UTF-8").normalize()
+	def matcher = text =~ /(?ms)^(## \[${java.util.regex.Pattern.quote(version)}\].*?)(?=^## \[|\z)/
+	if (!matcher.find()) {
+		throw new GradleException("CHANGELOG.md has no '## [${version}]' section")
+	}
+	return matcher.group(1).trim()
+}
+
+def releaseVersion = project.mod_version.tokenize("+")[0]
+def releaseMinecraftVersions = project.publish_minecraft_versions.split(",").collect { it.trim() }
+def missingToken = ["MODRINTH_TOKEN", "CURSEFORGE_TOKEN", "GITHUB_TOKEN"].any { System.getenv(it) == null || System.getenv(it).isEmpty() }
+
+publishMods {
+	file = remapJar.archiveFile
+	displayName = "Water Bucket Extinguish ${project.mod_version}"
+	version = project.mod_version
+	type = STABLE
+	modLoaders.add("fabric")
+	changelog = providers.provider { changelogSection(file("CHANGELOG.md"), releaseVersion) }
+	dryRun = missingToken || System.getenv("PUBLISH_DRY_RUN") == "true"
+
+	modrinth {
+		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+		projectId = "oyLBBIDr"
+		minecraftVersions.addAll(releaseMinecraftVersions)
+		environment = CLIENT_ONLY
+		requires("fabric-api")
+		requires("cloth-config")
+		optional("modmenu")
+	}
+
+	curseforge {
+		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+		projectId = "1467538"
+		projectSlug = "water-bucket-extinguish"
+		minecraftVersions.addAll(releaseMinecraftVersions)
+		// The Java level the classes are compiled for (options.release), not the toolchain.
+		javaVersions.add(tasks.named("compileJava").flatMap { it.options.release }.map { JavaVersion.toVersion(it) })
+		client = true
+		server = false
+		requires("fabric-api")
+		requires("cloth-config")
+		optional("modmenu")
+	}
+
+	github {
+		accessToken = providers.environmentVariable("GITHUB_TOKEN")
+		repository = "RpYTMc/WaterBucketExtinguish"
+		commitish = providers.environmentVariable("GITHUB_SHA").orElse("main")
+		tagName = providers.environmentVariable("GITHUB_REF_NAME").orElse(project.mod_version.replace("+", "-"))
 	}
 }
