@@ -135,7 +135,7 @@ def releaseMinecraftVersions = project.publish_minecraft_versions.split(",").col
 def missingToken = ["MODRINTH_TOKEN", "CURSEFORGE_TOKEN", "GITHUB_TOKEN"].any { System.getenv(it) == null || System.getenv(it).isEmpty() }
 
 publishMods {
-	file = remapJar.archiveFile
+	file = jar.archiveFile
 	displayName = "Water Bucket Extinguish ${project.mod_version}"
 	version = project.mod_version
 	type = STABLE
