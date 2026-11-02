@@ -1,7 +1,7 @@
 # Publishes a release when a tag like 1.4.3-mc1.21.11 is pushed: the jar goes to
 # Modrinth, CurseForge and a GitHub release (./gradlew publishMods, see build.gradle).
 # The tag must equal mod_version from gradle.properties with '+' replaced by '-'.
-# Needs the repository secrets MODRINTH_TOKEN and CURSEFORGE_TOKEN (README, "Releasing").
+# Needs the repository secrets MODRINTH_TOKEN and CURSEFORGE_TOKEN (CONTRIBUTING.md, "Releasing").
 # Starting it by hand from the Actions tab does a dry run that uploads nothing.
 
 name: release
