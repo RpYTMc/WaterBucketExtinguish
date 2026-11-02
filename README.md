@@ -43,6 +43,8 @@ Download the file whose name ends with your Minecraft version:
 
 | Minecraft | File name ends with | Java |
 |---|---|---|
+| 26.3 | `+mc26.3.jar` | 25 |
+| 26.2 | `+mc26.2.jar` | 25 |
 | 26.1, 26.1.1, 26.1.2 | `+mc26.1.jar` | 25 |
 | 1.21.11 | `+mc1.21.11.jar` | 21 |
 | 1.20.1 | `+mc1.20.1.jar` | 17 |
