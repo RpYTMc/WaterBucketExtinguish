@@ -101,7 +101,7 @@ public class WaterBucketClient implements ClientModInitializer {
 		if (failHintCooldown > 0) failHintCooldown--;
 
 		while (configKey.consumeClick()) {
-			client.setScreen(ModConfigScreen.create(client.screen));
+			client.gui.setScreen(ModConfigScreen.create(client.gui.screen()));
 		}
 
 		while (panicKey.consumeClick()) {

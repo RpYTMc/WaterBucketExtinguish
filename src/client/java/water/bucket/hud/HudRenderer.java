@@ -26,7 +26,7 @@ public class HudRenderer {
             if (client.player == null) return;
 
             // Respect F1 (hidden HUD) and stay out of the way of the F3 debug screen.
-            if (client.options.hideGui) return;
+            if (client.gui.hud.isHidden()) return;
             if (client.getDebugOverlay().showDebugScreen()) return;
 
             boolean hasHotbarBucket = HotbarUtils.findBucketSlot(client.player) != -1;

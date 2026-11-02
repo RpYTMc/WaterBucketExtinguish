@@ -54,7 +54,7 @@ public final class WaterBucketClientGameTest implements FabricClientGameTest {
 	@Override
 	public void runTest(ClientGameTestContext context) {
 		try (TestSingleplayerContext world = context.worldBuilder().create()) {
-			world.getClientLevel().waitForChunksRender();
+			world.getConnection().waitForChunksRender();
 			TestServerContext server = world.getServer();
 			server.runCommand("gamemode survival @a");
 			context.waitFor(client -> client.player != null && client.player.onGround(), 200);
@@ -185,7 +185,7 @@ public final class WaterBucketClientGameTest implements FabricClientGameTest {
 				.getEntrypoint();
 		context.setScreen(() -> modMenu.getModConfigScreenFactory().create(null));
 		context.waitTicks(5);
-		String screen = context.computeOnClient(client -> client.screen == null ? null : client.screen.getClass().getName());
+		String screen = context.computeOnClient(client -> client.gui.screen() == null ? null : client.gui.screen().getClass().getName());
 		check(screen != null, "the config screen must open through Mod Menu");
 		LOGGER.info("[gametest] config screen {} screenshot: {}", screen, context.takeScreenshot("waterbucket-config-screen"));
 		context.setScreen(() -> null);
