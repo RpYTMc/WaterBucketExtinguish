@@ -129,6 +129,25 @@ Settings are stored in `config/waterbucketconfig.json`, statistics in `config/wa
 
 ---
 
+## Releasing
+
+Releases are published by GitHub Actions when a version tag is pushed.
+
+One-time setup, in the repository settings under Secrets and variables, Actions:
+
+- `MODRINTH_TOKEN`: a Modrinth personal access token (modrinth.com/settings/pats) with the scopes Create versions, Read versions and Write versions.
+- `CURSEFORGE_TOKEN`: a CurseForge API token (legacy.curseforge.com/account/api-tokens).
+
+For each release, on each branch you release from:
+
+1. Set `mod_version` in `gradle.properties` and add a `## [x.y.z]` section to `CHANGELOG.md`. That section becomes the release notes.
+2. Commit and push the branch.
+3. Push a tag equal to `mod_version` with `+` replaced by `-`, for example `git tag 1.4.3-mc1.21.11` then `git push origin 1.4.3-mc1.21.11`.
+
+The `release` workflow builds the jar and uploads it to Modrinth, CurseForge and a GitHub release. The Minecraft versions each upload is listed for come from `publish_minecraft_versions` in `gradle.properties`. Starting the workflow by hand from the Actions tab, or running `./gradlew publishMods` without the tokens, is a dry run that uploads nothing.
+
+---
+
 ## License
 
 MIT License
