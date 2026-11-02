@@ -1,18 +1,17 @@
 package water.bucket.logic;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import water.bucket.config.ModConfig;
 import water.bucket.util.HotbarUtils;
 
 public class ExtinguishRules {
 
     /** True if any block overlapping the player's bounding box is a cobweb. */
-    public static boolean isInWeb(MinecraftClient client) {
+    public static boolean isInWeb(Minecraft client) {
 
         var box = client.player.getBoundingBox();
 
@@ -26,7 +25,7 @@ public class ExtinguishRules {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    if (client.world.getBlockState(new BlockPos(x, y, z)).isOf(Blocks.COBWEB)) {
+                    if (client.level.getBlockState(new BlockPos(x, y, z)).is(Blocks.COBWEB)) {
                         return true;
                     }
                 }
@@ -36,23 +35,23 @@ public class ExtinguishRules {
     }
 
     /** Fire-mode conditions, independent of which bucket is in the hotbar. */
-    public static boolean canExtinguish(MinecraftClient client) {
+    public static boolean canExtinguish(Minecraft client) {
 
         var player = client.player;
 
         if (!player.isOnFire()) return false;
-        if (player.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) return false;
-        if (!player.isOnGround()) return false;
+        if (player.hasEffect(MobEffects.FIRE_RESISTANCE)) return false;
+        if (!player.onGround()) return false;
 
         // Positive pitch = looking down; the water has to land at the feet.
-        return player.getPitch() >= ModConfig.INSTANCE.pitchThreshold;
+        return player.getXRot() >= ModConfig.INSTANCE.pitchThreshold;
     }
 
-    public static Mode resolveMode(MinecraftClient client) {
+    public static Mode resolveMode(Minecraft client) {
 
-        if (client.player == null || client.world == null) return Mode.NONE;
+        if (client.player == null || client.level == null) return Mode.NONE;
 
-        if (ModConfig.INSTANCE.disableInNether && client.world.getRegistryKey() == World.NETHER) {
+        if (ModConfig.INSTANCE.disableInNether && client.level.dimension() == Level.NETHER) {
             return Mode.NONE;
         }
 

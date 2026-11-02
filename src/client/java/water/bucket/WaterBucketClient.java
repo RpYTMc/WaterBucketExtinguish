@@ -1,26 +1,24 @@
 package water.bucket;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
-
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import org.lwjgl.glfw.GLFW;
 
 import water.bucket.command.WaterBucketCommand;
@@ -34,8 +32,8 @@ import water.bucket.util.HotbarUtils;
 
 public class WaterBucketClient implements ClientModInitializer {
 
-	private static final KeyBinding.Category WATERBUCKET_CATEGORY =
-			KeyBinding.Category.create(Identifier.of("waterbucket", "general"));
+	private static final KeyMapping.Category WATERBUCKET_CATEGORY =
+			KeyMapping.Category.register(Identifier.fromNamespaceAndPath("waterbucket", "general"));
 
 	/** Client ticks between placing the water in fire mode and picking it back up. */
 	private static final int PICKUP_DELAY_TICKS = 1;
@@ -44,8 +42,8 @@ public class WaterBucketClient implements ClientModInitializer {
 	/** Stats are flushed to disk at most this often (200 ticks = 10 s). */
 	private static final int STATS_FLUSH_INTERVAL_TICKS = 200;
 
-	private static KeyBinding panicKey;
-	private static KeyBinding configKey;
+	private static KeyMapping panicKey;
+	private static KeyMapping configKey;
 
 	// Fire mode is a two-step sequence: place now, pick the water back up on a later tick.
 	private boolean pickupPending = false;
@@ -74,24 +72,24 @@ public class WaterBucketClient implements ClientModInitializer {
 		ClientCommandRegistrationCallback.EVENT.register(
 				(dispatcher, registryAccess) -> WaterBucketCommand.register(dispatcher));
 
-		configKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		configKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 				"key.waterbucket.config",
-				InputUtil.Type.KEYSYM,
+				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_P,
 				WATERBUCKET_CATEGORY));
 
-		panicKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+		panicKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 				"key.waterbucket.activate",
-				InputUtil.Type.KEYSYM,
+				InputConstants.Type.KEYSYM,
 				GLFW.GLFW_KEY_RIGHT_BRACKET,
 				WATERBUCKET_CATEGORY));
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
 	}
 
-	private void onClientTick(MinecraftClient client) {
+	private void onClientTick(Minecraft client) {
 
-		if (client.player == null || client.interactionManager == null || client.world == null) {
+		if (client.player == null || client.gameMode == null || client.level == null) {
 			return;
 		}
 
@@ -102,11 +100,11 @@ public class WaterBucketClient implements ClientModInitializer {
 
 		if (failHintCooldown > 0) failHintCooldown--;
 
-		while (configKey.wasPressed()) {
-			client.setScreen(ModConfigScreen.create(client.currentScreen));
+		while (configKey.consumeClick()) {
+			client.setScreen(ModConfigScreen.create(client.screen));
 		}
 
-		while (panicKey.wasPressed()) {
+		while (panicKey.consumeClick()) {
 			if (pickupPending) continue; // still finishing the previous fire sequence
 			activate(client);
 		}
@@ -114,7 +112,7 @@ public class WaterBucketClient implements ClientModInitializer {
 		tickPendingPickup(client);
 	}
 
-	private void activate(MinecraftClient client) {
+	private void activate(Minecraft client) {
 
 		Mode mode = ExtinguishRules.resolveMode(client);
 
@@ -137,11 +135,11 @@ public class WaterBucketClient implements ClientModInitializer {
 				if (result.placedWater()) {
 					StatsManager.incrementWeb();
 					StatsManager.incrementActivation();
-					playFeedbackSound(client, SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(), 0.7f, 1.2f);
+					playFeedbackSound(client, SoundEvents.NOTE_BLOCK_HAT.value(), 0.7f, 1.2f);
 				} else if (result.pickedUpWater()) {
 					StatsManager.incrementPickup();
 					StatsManager.incrementActivation();
-					playFeedbackSound(client, SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(), 0.7f, 1.2f);
+					playFeedbackSound(client, SoundEvents.NOTE_BLOCK_HAT.value(), 0.7f, 1.2f);
 				}
 				restoreSlot(client);
 			}
@@ -150,7 +148,7 @@ public class WaterBucketClient implements ClientModInitializer {
 				if (result.placedWater()) {
 					StatsManager.incrementFire();
 					StatsManager.incrementActivation();
-					playFeedbackSound(client, SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(), 0.7f, 1.2f);
+					playFeedbackSound(client, SoundEvents.NOTE_BLOCK_HAT.value(), 0.7f, 1.2f);
 					sendActionBar(client, "Poof");
 
 					// Keep the bucket selected; the pickup follows on a later tick.
@@ -176,7 +174,7 @@ public class WaterBucketClient implements ClientModInitializer {
 		}
 	}
 
-	private void tickPendingPickup(MinecraftClient client) {
+	private void tickPendingPickup(Minecraft client) {
 
 		if (!pickupPending) return;
 
@@ -191,7 +189,7 @@ public class WaterBucketClient implements ClientModInitializer {
 		UseResult result = useHeldItem(client);
 
 		if (result.pickedUpWater()) {
-			playFeedbackSound(client, SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(), 0.6f, 1.0f);
+			playFeedbackSound(client, SoundEvents.NOTE_BLOCK_HAT.value(), 0.6f, 1.0f);
 		}
 
 		restoreSlot(client);
@@ -222,13 +220,13 @@ public class WaterBucketClient implements ClientModInitializer {
 	 * the vanilla sync that yields two identical slot packets in a row, which
 	 * anti-cheats (Grim, Frequency, ...) flag as impossible for a vanilla client.
 	 */
-	private static void selectSlot(MinecraftClient client, int slot) {
+	private static void selectSlot(Minecraft client, int slot) {
 		if (slot < 0 || slot > 8) return;
 		if (client.player.getInventory().getSelectedSlot() == slot) return;
 		client.player.getInventory().setSelectedSlot(slot);
 	}
 
-	private void restoreSlot(MinecraftClient client) {
+	private void restoreSlot(Minecraft client) {
 		if (previousSlot != -1) {
 			selectSlot(client, previousSlot);
 			previousSlot = -1;
@@ -236,10 +234,10 @@ public class WaterBucketClient implements ClientModInitializer {
 	}
 
 	/** One right-click with the held item, through the vanilla interaction manager. */
-	private static UseResult useHeldItem(MinecraftClient client) {
-		Item before = client.player.getMainHandStack().getItem();
-		client.interactionManager.interactItem(client.player, Hand.MAIN_HAND);
-		Item after = client.player.getMainHandStack().getItem();
+	private static UseResult useHeldItem(Minecraft client) {
+		Item before = client.player.getMainHandItem().getItem();
+		client.gameMode.useItem(client.player, InteractionHand.MAIN_HAND);
+		Item after = client.player.getMainHandItem().getItem();
 		return new UseResult(before, after);
 	}
 
@@ -257,7 +255,7 @@ public class WaterBucketClient implements ClientModInitializer {
 	// Feedback
 	// ------------------------------------------------------------------
 
-	private void explainFailure(MinecraftClient client) {
+	private void explainFailure(Minecraft client) {
 
 		if (failHintCooldown > 0) return;
 		failHintCooldown = FAIL_HINT_COOLDOWN_TICKS;
@@ -265,17 +263,17 @@ public class WaterBucketClient implements ClientModInitializer {
 		var player = client.player;
 		String reason;
 
-		if (ModConfig.INSTANCE.disableInNether && client.world.getRegistryKey() == World.NETHER) {
+		if (ModConfig.INSTANCE.disableInNether && client.level.dimension() == Level.NETHER) {
 			reason = "Disabled in Nether";
 		} else if (HotbarUtils.findBucketSlot(player) == -1) {
 			reason = "No bucket in hotbar";
 		} else if (!player.isOnFire()) {
 			reason = "Not on fire";
-		} else if (player.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) {
+		} else if (player.hasEffect(MobEffects.FIRE_RESISTANCE)) {
 			reason = "Fire Resistance active";
-		} else if (!player.isOnGround()) {
+		} else if (!player.onGround()) {
 			reason = "Must be on ground";
-		} else if (player.getPitch() < ModConfig.INSTANCE.pitchThreshold) {
+		} else if (player.getXRot() < ModConfig.INSTANCE.pitchThreshold) {
 			reason = "Look down to place water";
 		} else {
 			reason = "Can't use WaterBucket";
@@ -285,13 +283,13 @@ public class WaterBucketClient implements ClientModInitializer {
 		sendActionBar(client, reason);
 	}
 
-	private static void playFeedbackSound(MinecraftClient client, SoundEvent sound, float volume, float pitch) {
+	private static void playFeedbackSound(Minecraft client, SoundEvent sound, float volume, float pitch) {
 		if (!ModConfig.INSTANCE.enableSound) return;
 		client.player.playSound(sound, volume, pitch);
 	}
 
-	private static void sendActionBar(MinecraftClient client, String message) {
+	private static void sendActionBar(Minecraft client, String message) {
 		if (!ModConfig.INSTANCE.enableActionBar) return;
-		client.player.sendMessage(Text.literal(message).formatted(Formatting.GRAY, Formatting.ITALIC), true);
+		client.player.displayClientMessage(Component.literal(message).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
 	}
 }

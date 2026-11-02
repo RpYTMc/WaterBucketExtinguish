@@ -3,10 +3,8 @@ package water.bucket.config;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-
-
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 public class ModConfigScreen {
 
@@ -14,34 +12,34 @@ public class ModConfigScreen {
 
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)
-                .setTitle(Text.literal("Water Bucket Extinguish Settings"));
+                .setTitle(Component.literal("Water Bucket Extinguish Settings"));
 
         builder.setSavingRunnable(() -> {
             // For now nothing, later we save to file
             ModConfig.INSTANCE.save();
         });
 
-        ConfigCategory general = builder.getOrCreateCategory(Text.literal("Water Bucket Extinguish"));
+        ConfigCategory general = builder.getOrCreateCategory(Component.literal("Water Bucket Extinguish"));
 
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
         var behaviorSub = entryBuilder.startSubCategory(
-                Text.literal("Behavior")
+                Component.literal("Behavior")
         );
 
         behaviorSub.setExpanded(false);
-        behaviorSub.setTooltip(Text.literal("Core activation behavior settings."));
+        behaviorSub.setTooltip(Component.literal("Core activation behavior settings."));
 
         behaviorSub.add(
                 entryBuilder.startIntSlider(
-                                Text.literal("Pitch Threshold"),
+                                Component.literal("Pitch Threshold"),
                                 ModConfig.INSTANCE.pitchThreshold,
                                 0,
                                 90
                         )
                         .setDefaultValue(67)
                         .setTooltip(
-                                Text.literal("Minimum downward angle required, cobwebs bypass this.")
+                                Component.literal("Minimum downward angle required, cobwebs bypass this.")
                         )
                         .setSaveConsumer(value -> ModConfig.INSTANCE.pitchThreshold = value)
                         .build()
@@ -50,30 +48,30 @@ public class ModConfigScreen {
         general.addEntry(behaviorSub.build());
 
         var feedbackSub = entryBuilder.startSubCategory(
-                Text.literal("Feedback")
+                Component.literal("Feedback")
         );
 
         feedbackSub.setExpanded(false);
-        feedbackSub.setTooltip(Text.literal("Visual and audio feedback options."));
+        feedbackSub.setTooltip(Component.literal("Visual and audio feedback options."));
 
         feedbackSub.add(
                 entryBuilder.startBooleanToggle(
-                                Text.literal("Enable Sound"),
+                                Component.literal("Enable Sound"),
                                 ModConfig.INSTANCE.enableSound
                         )
                         .setDefaultValue(true)
-                        .setTooltip(Text.literal("Play sound when the mod activates double press."))
+                        .setTooltip(Component.literal("Play sound when the mod activates double press."))
                         .setSaveConsumer(value -> ModConfig.INSTANCE.enableSound = value)
                         .build()
         );
 
         feedbackSub.add(
                 entryBuilder.startBooleanToggle(
-                                Text.literal("Enable Action Bar"),
+                                Component.literal("Enable Action Bar"),
                                 ModConfig.INSTANCE.enableActionBar
                         )
                         .setDefaultValue(true)
-                        .setTooltip(Text.literal("Display a 'Poof' in the action bar when extinguishing fire."))
+                        .setTooltip(Component.literal("Display a 'Poof' in the action bar when extinguishing fire."))
                         .setSaveConsumer(value -> ModConfig.INSTANCE.enableActionBar = value)
                         .build()
         );
@@ -81,22 +79,22 @@ public class ModConfigScreen {
         general.addEntry(feedbackSub.build());
 
         var environmentSub = entryBuilder.startSubCategory(
-                Text.literal("Environment")
+                Component.literal("Environment")
         );
 
         environmentSub.setExpanded(false);
         environmentSub.setTooltip(
-                Text.literal("Dimension-based restrictions.")
+                Component.literal("Dimension-based restrictions.")
         );
 
         environmentSub.add(
                 entryBuilder.startBooleanToggle(
-                                Text.literal("Disable in Nether"),
+                                Component.literal("Disable in Nether"),
                                 ModConfig.INSTANCE.disableInNether
                         )
                         .setDefaultValue(true)
                         .setTooltip(
-                                Text.literal("Prevents activation in the Nether.")
+                                Component.literal("Prevents activation in the Nether.")
                         )
                         .setSaveConsumer(value ->
                                 ModConfig.INSTANCE.disableInNether = value
@@ -107,20 +105,20 @@ public class ModConfigScreen {
         general.addEntry(environmentSub.build());
 
         var hudSub = entryBuilder.startSubCategory(
-                Text.literal("HUD")
+                Component.literal("HUD")
         );
 
         hudSub.setExpanded(false);
-        hudSub.setTooltip(Text.literal("Heads-up display settings."));
+        hudSub.setTooltip(Component.literal("Heads-up display settings."));
 
 // Enable HUD toggle
         hudSub.add(
                 entryBuilder.startBooleanToggle(
-                                Text.literal("Enable HUD"),
+                                Component.literal("Enable HUD"),
                                 ModConfig.INSTANCE.enableHud
                         )
                         .setDefaultValue(true)
-                        .setTooltip(Text.literal("Show the bucket status and action feedback on screen."))
+                        .setTooltip(Component.literal("Show the bucket status and action feedback on screen."))
                         .setSaveConsumer(value ->
                                 ModConfig.INSTANCE.enableHud = value
                         )
@@ -130,12 +128,12 @@ public class ModConfigScreen {
 // HUD Position selector
         hudSub.add(
                 entryBuilder.startEnumSelector(
-                                Text.literal("HUD Position"),
+                                Component.literal("HUD Position"),
                                 ModConfig.HudPosition.class,
                                 ModConfig.INSTANCE.hudPosition
                         )
                         .setDefaultValue(ModConfig.HudPosition.TOP_LEFT)
-                        .setTooltip(Text.literal("Change where the HUD appears on screen."))
+                        .setTooltip(Component.literal("Change where the HUD appears on screen."))
                         .setSaveConsumer(value ->
                                 ModConfig.INSTANCE.hudPosition = value
                         )

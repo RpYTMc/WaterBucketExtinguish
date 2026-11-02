@@ -8,12 +8,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.Items;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.item.Items;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -26,8 +25,8 @@ import water.bucket.util.HotbarUtils;
 
 public class WaterBucketCommand {
 
-    private static final MutableText PREFIX =
-            Text.literal("[WaterBucket] ").formatted(Formatting.GOLD);
+    private static final MutableComponent PREFIX =
+            Component.literal("[WaterBucket] ").withStyle(ChatFormatting.GOLD);
 
     // =========================================================
     // REGISTER
@@ -47,8 +46,8 @@ public class WaterBucketCommand {
                         .then(literal("reset")
                                 .executes(ctx -> {
                                     StatsManager.reset();
-                                    panel(ctx, Text.literal("Statistics reset.")
-                                            .formatted(Formatting.YELLOW));
+                                    panel(ctx, Component.literal("Statistics reset.")
+                                            .withStyle(ChatFormatting.YELLOW));
                                     return 1;
                                 }))
                 )
@@ -103,12 +102,12 @@ public class WaterBucketCommand {
                 .getVersion()
                 .getFriendlyString();
 
-        panel(ctx, Text.literal("Water Bucket Extinguish v" + version)
-                .formatted(Formatting.GOLD));
-        panel(ctx, Text.literal("Semi PvP-oriented Fabric utility mod.")
-                .formatted(Formatting.GRAY));
-        panel(ctx, Text.literal("Use /waterbucket help for commands.")
-                .formatted(Formatting.DARK_GRAY));
+        panel(ctx, Component.literal("Water Bucket Extinguish v" + version)
+                .withStyle(ChatFormatting.GOLD));
+        panel(ctx, Component.literal("Semi PvP-oriented Fabric utility mod.")
+                .withStyle(ChatFormatting.GRAY));
+        panel(ctx, Component.literal("Use /waterbucket help for commands.")
+                .withStyle(ChatFormatting.DARK_GRAY));
 
         return 1;
     }
@@ -122,23 +121,23 @@ public class WaterBucketCommand {
                 .getVersion()
                 .getFriendlyString();
 
-        panel(ctx, Text.literal("━━━━━━━━━━━━━━━━━━━━━━━━")
-                .formatted(Formatting.DARK_GRAY));
-        panel(ctx, Text.literal(" Water Bucket Extinguish v" + version)
-                .formatted(Formatting.GOLD));
-        panel(ctx, Text.literal("━━━━━━━━━━━━━━━━━━━━━━━━")
-                .formatted(Formatting.DARK_GRAY));
+        panel(ctx, Component.literal("━━━━━━━━━━━━━━━━━━━━━━━━")
+                .withStyle(ChatFormatting.DARK_GRAY));
+        panel(ctx, Component.literal(" Water Bucket Extinguish v" + version)
+                .withStyle(ChatFormatting.GOLD));
+        panel(ctx, Component.literal("━━━━━━━━━━━━━━━━━━━━━━━━")
+                .withStyle(ChatFormatting.DARK_GRAY));
 
-        panel(ctx, Text.literal("➤ Information")
-                .formatted(Formatting.YELLOW));
+        panel(ctx, Component.literal("➤ Information")
+                .withStyle(ChatFormatting.YELLOW));
         helpLine(ctx, "help", "Show this help menu");
         helpLine(ctx, "bucket", "Check bucket readiness");
         helpLine(ctx, "stats", "View usage statistics");
 
-        panel(ctx, Text.literal(""));
+        panel(ctx, Component.literal(""));
 
-        panel(ctx, Text.literal("➤ Configuration")
-                .formatted(Formatting.AQUA));
+        panel(ctx, Component.literal("➤ Configuration")
+                .withStyle(ChatFormatting.AQUA));
         helpLine(ctx, "config pitch", "Change pitch threshold");
         helpLine(ctx, "config sound", "Toggle activation sound");
         helpLine(ctx, "config actionbar", "Toggle action bar message");
@@ -146,8 +145,8 @@ public class WaterBucketCommand {
         helpLine(ctx, "config hud", "Toggle HUD display");
         helpLine(ctx, "config hudpos", "Change HUD position");
 
-        panel(ctx, Text.literal("━━━━━━━━━━━━━━━━━━━━━━━━")
-                .formatted(Formatting.DARK_GRAY));
+        panel(ctx, Component.literal("━━━━━━━━━━━━━━━━━━━━━━━━")
+                .withStyle(ChatFormatting.DARK_GRAY));
 
         return 1;
     }
@@ -156,28 +155,28 @@ public class WaterBucketCommand {
 
         StatsData data = StatsManager.getData();
 
-        panel(ctx, Text.literal("=== Statistics ===")
-                .formatted(Formatting.YELLOW));
+        panel(ctx, Component.literal("=== Statistics ===")
+                .withStyle(ChatFormatting.YELLOW));
 
-        feedback(ctx, Text.literal("Total Activations: ")
-                .formatted(Formatting.GRAY)
-                .append(Text.literal(String.valueOf(data.totalActivations))
-                        .formatted(Formatting.AQUA)));
+        feedback(ctx, Component.literal("Total Activations: ")
+                .withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(String.valueOf(data.totalActivations))
+                        .withStyle(ChatFormatting.AQUA)));
 
-        feedback(ctx, Text.literal("Fire Extinguishes: ")
-                .formatted(Formatting.GRAY)
-                .append(Text.literal(String.valueOf(data.fireExtinguishes))
-                        .formatted(Formatting.RED)));
+        feedback(ctx, Component.literal("Fire Extinguishes: ")
+                .withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(String.valueOf(data.fireExtinguishes))
+                        .withStyle(ChatFormatting.RED)));
 
-        feedback(ctx, Text.literal("Web Placements: ")
-                .formatted(Formatting.GRAY)
-                .append(Text.literal(String.valueOf(data.webPlacements))
-                        .formatted(Formatting.GREEN)));
+        feedback(ctx, Component.literal("Web Placements: ")
+                .withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(String.valueOf(data.webPlacements))
+                        .withStyle(ChatFormatting.GREEN)));
 
-        feedback(ctx, Text.literal("Water Pickups: ")
-                .formatted(Formatting.GRAY)
-                .append(Text.literal(String.valueOf(data.waterPickups))
-                        .formatted(Formatting.BLUE)));
+        feedback(ctx, Component.literal("Water Pickups: ")
+                .withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(String.valueOf(data.waterPickups))
+                        .withStyle(ChatFormatting.BLUE)));
 
         return 1;
     }
@@ -191,23 +190,23 @@ public class WaterBucketCommand {
         boolean hasHotbar = hotbarSlot != -1;
         boolean hasInventory = false;
 
-        for (int i = 0; i < player.getInventory().size(); i++) {
-            var stack = player.getInventory().getStack(i);
-            if (stack.isOf(Items.WATER_BUCKET) || stack.isOf(Items.BUCKET)) {
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            var stack = player.getInventory().getItem(i);
+            if (stack.is(Items.WATER_BUCKET) || stack.is(Items.BUCKET)) {
                 hasInventory = true;
                 break;
             }
         }
 
         if (hasHotbar) {
-            panel(ctx, Text.literal("✔ Bucket Ready")
-                    .formatted(Formatting.GREEN));
+            panel(ctx, Component.literal("✔ Bucket Ready")
+                    .withStyle(ChatFormatting.GREEN));
         } else if (hasInventory) {
-            panel(ctx, Text.literal("⚠ Bucket in Inventory")
-                    .formatted(Formatting.YELLOW));
+            panel(ctx, Component.literal("⚠ Bucket in Inventory")
+                    .withStyle(ChatFormatting.YELLOW));
         } else {
-            panel(ctx, Text.literal("✖ No Bucket Found")
-                    .formatted(Formatting.RED));
+            panel(ctx, Component.literal("✖ No Bucket Found")
+                    .withStyle(ChatFormatting.RED));
         }
 
         return 1;
@@ -215,8 +214,8 @@ public class WaterBucketCommand {
 
     private static int showConfigHelp(CommandContext<FabricClientCommandSource> ctx) {
 
-        panel(ctx, Text.literal("Config commands:")
-                .formatted(Formatting.YELLOW));
+        panel(ctx, Component.literal("Config commands:")
+                .withStyle(ChatFormatting.YELLOW));
 
         helpLine(ctx, "config pitch", "Change pitch threshold");
         helpLine(ctx, "config sound", "Toggle sound");
@@ -240,18 +239,18 @@ public class WaterBucketCommand {
 
         return literal(name)
                 .executes(ctx -> {
-                    feedback(ctx, Text.literal(name + ": ")
-                            .formatted(Formatting.GRAY)
-                            .append(Text.literal(String.valueOf(getter.get()))
-                                    .formatted(getter.get() ? Formatting.GREEN : Formatting.RED)));
+                    feedback(ctx, Component.literal(name + ": ")
+                            .withStyle(ChatFormatting.GRAY)
+                            .append(Component.literal(String.valueOf(getter.get()))
+                                    .withStyle(getter.get() ? ChatFormatting.GREEN : ChatFormatting.RED)));
                     return 1;
                 })
                 .then(literal("reset")
                         .executes(ctx -> {
                             setter.accept(defaultValue);
                             ModConfig.INSTANCE.save();
-                            feedback(ctx, Text.literal(name + " reset.")
-                                    .formatted(Formatting.YELLOW));
+                            feedback(ctx, Component.literal(name + " reset.")
+                                    .withStyle(ChatFormatting.YELLOW));
                             return 1;
                         }))
                 .then(argument("value", BoolArgumentType.bool())
@@ -259,9 +258,9 @@ public class WaterBucketCommand {
                             boolean value = BoolArgumentType.getBool(ctx, "value");
                             setter.accept(value);
                             ModConfig.INSTANCE.save();
-                            feedback(ctx, Text.literal(name + " set to ")
-                                    .append(Text.literal(String.valueOf(value))
-                                            .formatted(value ? Formatting.GREEN : Formatting.RED)));
+                            feedback(ctx, Component.literal(name + " set to ")
+                                    .append(Component.literal(String.valueOf(value))
+                                            .withStyle(value ? ChatFormatting.GREEN : ChatFormatting.RED)));
                             return 1;
                         }));
     }
@@ -275,18 +274,18 @@ public class WaterBucketCommand {
 
         return literal(name)
                 .executes(ctx -> {
-                    feedback(ctx, Text.literal(name + ": ")
-                            .formatted(Formatting.GRAY)
-                            .append(Text.literal(String.valueOf(getter.get()))
-                                    .formatted(Formatting.AQUA)));
+                    feedback(ctx, Component.literal(name + ": ")
+                            .withStyle(ChatFormatting.GRAY)
+                            .append(Component.literal(String.valueOf(getter.get()))
+                                    .withStyle(ChatFormatting.AQUA)));
                     return 1;
                 })
                 .then(literal("reset")
                         .executes(ctx -> {
                             setter.accept(defaultValue);
                             ModConfig.INSTANCE.save();
-                            feedback(ctx, Text.literal(name + " reset.")
-                                    .formatted(Formatting.YELLOW));
+                            feedback(ctx, Component.literal(name + " reset.")
+                                    .withStyle(ChatFormatting.YELLOW));
                             return 1;
                         }))
                 .then(argument("value", IntegerArgumentType.integer(min, max))
@@ -294,9 +293,9 @@ public class WaterBucketCommand {
                             int value = IntegerArgumentType.getInteger(ctx, "value");
                             setter.accept(value);
                             ModConfig.INSTANCE.save();
-                            feedback(ctx, Text.literal(name + " set to ")
-                                    .append(Text.literal(String.valueOf(value))
-                                            .formatted(Formatting.AQUA)));
+                            feedback(ctx, Component.literal(name + " set to ")
+                                    .append(Component.literal(String.valueOf(value))
+                                            .withStyle(ChatFormatting.AQUA)));
                             return 1;
                         }));
     }
@@ -305,10 +304,10 @@ public class WaterBucketCommand {
 
         return literal("hudpos")
                 .executes(ctx -> {
-                    feedback(ctx, Text.literal("HUD Position: ")
-                            .formatted(Formatting.GRAY)
-                            .append(Text.literal(ModConfig.INSTANCE.hudPosition.name())
-                                    .formatted(Formatting.AQUA)));
+                    feedback(ctx, Component.literal("HUD Position: ")
+                            .withStyle(ChatFormatting.GRAY)
+                            .append(Component.literal(ModConfig.INSTANCE.hudPosition.name())
+                                    .withStyle(ChatFormatting.AQUA)));
                     return 1;
                 })
                 .then(argument("value", StringArgumentType.word())
@@ -325,24 +324,24 @@ public class WaterBucketCommand {
                             try {
                                 position = ModConfig.HudPosition.valueOf(input);
                             } catch (IllegalArgumentException e) {
-                                feedback(ctx, Text.literal("Unknown position. Use top_left, top_right, bottom_left or bottom_right.")
-                                        .formatted(Formatting.RED));
+                                feedback(ctx, Component.literal("Unknown position. Use top_left, top_right, bottom_left or bottom_right.")
+                                        .withStyle(ChatFormatting.RED));
                                 return 0;
                             }
                             ModConfig.INSTANCE.hudPosition = position;
                             ModConfig.INSTANCE.save();
 
-                            feedback(ctx, Text.literal("HUD Position set to ")
-                                    .append(Text.literal(input)
-                                            .formatted(Formatting.AQUA)));
+                            feedback(ctx, Component.literal("HUD Position set to ")
+                                    .append(Component.literal(input)
+                                            .withStyle(ChatFormatting.AQUA)));
                             return 1;
                         }))
                 .then(literal("reset")
                         .executes(ctx -> {
                             ModConfig.INSTANCE.hudPosition = ModConfig.HudPosition.TOP_LEFT;
                             ModConfig.INSTANCE.save();
-                            feedback(ctx, Text.literal("HUD Position reset.")
-                                    .formatted(Formatting.YELLOW));
+                            feedback(ctx, Component.literal("HUD Position reset.")
+                                    .withStyle(ChatFormatting.YELLOW));
                             return 1;
                         }));
     }
@@ -351,11 +350,11 @@ public class WaterBucketCommand {
     // OUTPUT HELPERS
     // =========================================================
 
-    private static void feedback(CommandContext<FabricClientCommandSource> ctx, Text message) {
+    private static void feedback(CommandContext<FabricClientCommandSource> ctx, Component message) {
         ctx.getSource().sendFeedback(PREFIX.copy().append(message));
     }
 
-    private static void panel(CommandContext<FabricClientCommandSource> ctx, Text message) {
+    private static void panel(CommandContext<FabricClientCommandSource> ctx, Component message) {
         ctx.getSource().sendFeedback(message);
     }
 
@@ -364,10 +363,10 @@ public class WaterBucketCommand {
                                  String description) {
 
         panel(ctx,
-                Text.literal("  /waterbucket ")
-                        .formatted(Formatting.DARK_GRAY)
-                        .append(Text.literal(command).formatted(Formatting.AQUA))
-                        .append(Text.literal(" - " + description)
-                                .formatted(Formatting.GRAY)));
+                Component.literal("  /waterbucket ")
+                        .withStyle(ChatFormatting.DARK_GRAY)
+                        .append(Component.literal(command).withStyle(ChatFormatting.AQUA))
+                        .append(Component.literal(" - " + description)
+                                .withStyle(ChatFormatting.GRAY)));
     }
 }

@@ -1,8 +1,8 @@
 package water.bucket.hud;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.Items;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.Items;
 
 import water.bucket.config.ModConfig;
 import water.bucket.util.HotbarUtils;
@@ -17,19 +17,19 @@ public class HudRenderer {
 
             if (!ModConfig.INSTANCE.enableHud) return;
 
-            MinecraftClient client = MinecraftClient.getInstance();
+            Minecraft client = Minecraft.getInstance();
             if (client.player == null) return;
 
             // Respect F1 (hidden HUD) and stay out of the way of the F3 debug screen.
-            if (client.options.hudHidden) return;
-            if (client.getDebugHud().shouldShowDebugHud()) return;
+            if (client.options.hideGui) return;
+            if (client.getDebugOverlay().showDebugScreen()) return;
 
             boolean hasHotbarBucket = HotbarUtils.findBucketSlot(client.player) != -1;
             boolean hasInventoryBucket = false;
 
-            for (int i = 0; i < client.player.getInventory().size(); i++) {
-                var stack = client.player.getInventory().getStack(i);
-                if (stack.isOf(Items.WATER_BUCKET) || stack.isOf(Items.BUCKET)) {
+            for (int i = 0; i < client.player.getInventory().getContainerSize(); i++) {
+                var stack = client.player.getInventory().getItem(i);
+                if (stack.is(Items.WATER_BUCKET) || stack.is(Items.BUCKET)) {
                     hasInventoryBucket = true;
                     break;
                 }
@@ -49,9 +49,9 @@ public class HudRenderer {
                 statusColor = 0xFFFF5555;
             }
 
-            int screenWidth = client.getWindow().getScaledWidth();
-            int screenHeight = client.getWindow().getScaledHeight();
-            int textWidth = client.textRenderer.getWidth(statusText);
+            int screenWidth = client.getWindow().getGuiScaledWidth();
+            int screenHeight = client.getWindow().getGuiScaledHeight();
+            int textWidth = client.font.width(statusText);
 
             int x = switch (ModConfig.INSTANCE.hudPosition) {
                 case TOP_LEFT, BOTTOM_LEFT -> MARGIN;
@@ -62,7 +62,7 @@ public class HudRenderer {
                 case BOTTOM_LEFT, BOTTOM_RIGHT -> screenHeight - MARGIN - LINE_HEIGHT;
             };
 
-            context.drawText(client.textRenderer, statusText, x, y, statusColor, true);
+            context.drawString(client.font, statusText, x, y, statusColor, true);
         });
     }
 }
