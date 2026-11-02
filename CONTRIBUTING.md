@@ -49,7 +49,7 @@ Releases are published by GitHub Actions when a version tag is pushed. The workf
 One-time setup, in the repository settings under Secrets and variables, Actions:
 
 - `MODRINTH_TOKEN`: a Modrinth personal access token (modrinth.com/settings/pats) with the scopes Create versions, Read versions, Write versions, Read projects and Write projects. The project scopes let a release update the Modrinth description.
-- `CURSEFORGE_TOKEN`: a CurseForge API token (legacy.curseforge.com/account/api-tokens).
+- `CURSEFORGE_TOKEN`: a CurseForge API token, made on the author site under Settings, API Tokens (authors.curseforge.com/#/settings/api-tokens).
 
 For each release, on each branch you release from:
 
