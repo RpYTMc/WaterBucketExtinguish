@@ -1,0 +1,61 @@
+# Publishes a release when a tag like 1.4.3-mc1.21.11 is pushed: the jar goes to
+# Modrinth, CurseForge and a GitHub release (./gradlew publishMods, see build.gradle).
+# The tag must equal mod_version from gradle.properties with '+' replaced by '-'.
+# Needs the repository secrets MODRINTH_TOKEN and CURSEFORGE_TOKEN (README, "Releasing").
+# Starting it by hand from the Actions tab does a dry run that uploads nothing.
+
+name: release
+on:
+  push:
+    tags: ['*-mc*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+      - name: setup jdk
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: check the tag matches mod_version
+        if: github.event_name == 'push'
+        run: |
+          expected="$(sed -n 's/^mod_version=//p' gradle.properties | tr -d '\r' | tr '+' '-')"
+          if [ "$GITHUB_REF_NAME" != "$expected" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match mod_version in gradle.properties (expected tag $expected)."
+            exit 1
+          fi
+      - name: check the publishing secrets
+        if: github.event_name == 'push'
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: |
+          if [ -z "$MODRINTH_TOKEN" ] || [ -z "$CURSEFORGE_TOKEN" ]; then
+            echo "::error::Add MODRINTH_TOKEN and CURSEFORGE_TOKEN as repository secrets (Settings, Secrets and variables, Actions)."
+            exit 1
+          fi
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+      - name: build and publish
+        run: ./gradlew build publishMods
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_DRY_RUN: ${{ github.event_name != 'push' }}
+      - name: keep the dry run output
+        if: github.event_name != 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: publish-dry-run
+          path: build/publishMods/
