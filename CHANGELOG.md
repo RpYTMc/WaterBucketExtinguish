@@ -4,6 +4,14 @@ All notable changes to this project are documented here.
 
 This project follows semantic versioning.
 
+## [1.4.4] - 2026-11-03
+
+### Changed
+- Cloth Config is now optional. Without it the commands still work, and the settings key tells you how to get the settings screen.
+
+### Fixed
+- The HUD showed "Bucket Ready" when your hotbar only had an empty bucket, which can't put out fire. It now shows "Bucket Empty" for that case.
+
 ## [1.4.3] - 2026-09-14
 
 ### Added

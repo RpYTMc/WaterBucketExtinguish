@@ -25,8 +25,10 @@ import org.slf4j.LoggerFactory;
 
 import water.bucket.config.ModConfig;
 import water.bucket.stats.StatsManager;
+import water.bucket.util.HotbarUtils;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Plays the mod in a real singleplayer world: the panic key is pressed through the
@@ -40,7 +42,11 @@ import java.util.Arrays;
  *   <li>Refill: a water source in front, an empty bucket in slot 3 and a water bucket
  *       in slot 4. The press must use the empty bucket, not the full one.</li>
  *   <li>Cobweb: standing in a cobweb with a water bucket, the press places water.</li>
- *   <li>Client commands, the HUD and the config screen opened through Mod Menu.</li>
+ *   <li>Client commands, the HUD and the settings: with Cloth Config the Mod Menu
+ *       button and the settings key open the config screen, without it neither opens
+ *       a screen.</li>
+ *   <li>Bucket status shown by the HUD: water bucket in the hotbar, only an empty one
+ *       there, a bucket only in the main inventory, and no bucket.</li>
  * </ol>
  */
 public final class WaterBucketClientGameTest implements FabricClientGameTest {
@@ -50,6 +56,8 @@ public final class WaterBucketClientGameTest implements FabricClientGameTest {
 	private static final int SWORD_SLOT = 0;
 	private static final int EMPTY_SLOT = 3;
 	private static final int WATER_SLOT = 4;
+	/** A main-inventory slot, outside the hotbar. */
+	private static final int INVENTORY_SLOT = 20;
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
@@ -66,6 +74,7 @@ public final class WaterBucketClientGameTest implements FabricClientGameTest {
 			refillMode(context, server, feet);
 			cobwebMode(context, server, feet);
 			commandsHudAndScreens(context);
+			bucketStatus(context, server);
 		}
 	}
 
@@ -183,16 +192,76 @@ public final class WaterBucketClientGameTest implements FabricClientGameTest {
 				.findFirst()
 				.orElseThrow(() -> new AssertionError("waterbucket must register a Mod Menu entrypoint"))
 				.getEntrypoint();
-		context.setScreen(() -> modMenu.getModConfigScreenFactory().create(null));
-		context.waitTicks(5);
-		String screen = context.computeOnClient(client -> client.gui.screen() == null ? null : client.gui.screen().getClass().getName());
-		check(screen != null, "the config screen must open through Mod Menu");
-		LOGGER.info("[gametest] config screen {} screenshot: {}", screen, context.takeScreenshot("waterbucket-config-screen"));
-		context.setScreen(() -> null);
+
+		// Cloth Config is optional: the settings screen exists only when it is installed.
+		boolean cloth = FabricLoader.getInstance().isModLoaded("cloth-config");
+		if (cloth) {
+			context.setScreen(() -> modMenu.getModConfigScreenFactory().create(null));
+			context.waitTicks(5);
+			String screen = currentScreen(context);
+			check(screen != null, "the config screen must open through Mod Menu");
+			LOGGER.info("[gametest] config screen {} screenshot: {}", screen, context.takeScreenshot("waterbucket-config-screen"));
+			context.setScreen(() -> null);
+			context.waitTicks(2);
+
+			pressKey(context, "key.waterbucket.config");
+			context.waitTicks(5);
+			String keyScreen = currentScreen(context);
+			check(keyScreen != null, "the settings key must open the config screen");
+			context.setScreen(() -> null);
+			context.waitTicks(2);
+			LOGGER.info("[gametest] with Cloth Config: Mod Menu and the settings key opened {}", keyScreen);
+		} else {
+			boolean noFactoryScreen = context.computeOnClient(client -> modMenu.getModConfigScreenFactory().create(null) == null);
+			check(noFactoryScreen, "without Cloth Config the Mod Menu factory must give no screen");
+
+			pressKey(context, "key.waterbucket.config");
+			context.waitTicks(5);
+			String keyScreen = currentScreen(context);
+			check(keyScreen == null, "without Cloth Config the settings key must not open a screen, got " + keyScreen);
+			LOGGER.info("[gametest] without Cloth Config: no settings screen from Mod Menu or the settings key, screenshot: {}",
+					context.takeScreenshot("waterbucket-settings-key-no-cloth"));
+		}
 
 		int reset = runClientCommand(context, "waterbucket config hudpos reset");
 		check(reset == 1 && ModConfig.INSTANCE.hudPosition == ModConfig.HudPosition.TOP_LEFT, "hudpos reset must work");
 		LOGGER.info("[gametest] commands, HUD and config screen passed");
+	}
+
+	private static void bucketStatus(ClientGameTestContext context, TestServerContext server) {
+		expectBucketStatus(context, server, Map.of(WATER_SLOT, Items.WATER_BUCKET, EMPTY_SLOT, Items.BUCKET),
+				HotbarUtils.BucketStatus.READY);
+		// An empty bucket can't put out fire, even with a water bucket elsewhere in the inventory.
+		expectBucketStatus(context, server, Map.of(EMPTY_SLOT, Items.BUCKET, INVENTORY_SLOT, Items.WATER_BUCKET),
+				HotbarUtils.BucketStatus.EMPTY);
+		LOGGER.info("[gametest] HUD with only an empty bucket screenshot: {}", context.takeScreenshot("waterbucket-hud-empty"));
+		expectBucketStatus(context, server, Map.of(INVENTORY_SLOT, Items.WATER_BUCKET), HotbarUtils.BucketStatus.INVENTORY);
+		expectBucketStatus(context, server, Map.of(INVENTORY_SLOT, Items.BUCKET), HotbarUtils.BucketStatus.INVENTORY);
+		expectBucketStatus(context, server, Map.of(), HotbarUtils.BucketStatus.NONE);
+		LOGGER.info("[gametest] bucket status passed");
+	}
+
+	/** Gives the player exactly these items (slot to item) on the server, then checks the status on the client. */
+	private static void expectBucketStatus(ClientGameTestContext context, TestServerContext server,
+			Map<Integer, Item> items, HotbarUtils.BucketStatus expected) {
+		server.runOnServer(s -> {
+			ServerPlayer p = player(s);
+			p.getInventory().clearContent();
+			items.forEach((slot, item) -> p.getInventory().setItem(slot, new ItemStack(item)));
+		});
+		context.waitFor(client -> {
+			for (int i = 0; i < client.player.getInventory().getContainerSize(); i++) {
+				if (clientItem(client, i) != items.getOrDefault(i, Items.AIR)) return false;
+			}
+			return true;
+		}, 100);
+		context.waitTicks(2);
+
+		HotbarUtils.BucketStatus status = context.computeOnClient(client -> HotbarUtils.status(client.player));
+		check(status == expected, "bucket status with " + items + ": expected " + expected + ", got " + status);
+		int result = runClientCommand(context, "waterbucket bucket");
+		check(result == 1, "/waterbucket bucket must succeed with status " + expected + ", returned " + result);
+		LOGGER.info("[gametest] bucket status {} ok with {}", expected, items);
 	}
 
 	/** Runs a client command the way the chat box does, on the client thread. */
@@ -208,10 +277,20 @@ public final class WaterBucketClientGameTest implements FabricClientGameTest {
 	}
 
 	private static void pressPanicKey(ClientGameTestContext context) {
+		pressKey(context, "key.waterbucket.activate");
+	}
+
+	/** Presses the key bound to this key mapping name through the normal keyboard handling. */
+	private static void pressKey(ClientGameTestContext context, String name) {
 		context.getInput().pressKey(options -> Arrays.stream(options.keyMappings)
-				.filter(mapping -> mapping.getName().equals("key.waterbucket.activate"))
+				.filter(mapping -> mapping.getName().equals(name))
 				.findFirst()
-				.orElseThrow(() -> new AssertionError("the panic key mapping must be registered")));
+				.orElseThrow(() -> new AssertionError("the key mapping " + name + " must be registered")));
+	}
+
+	/** Class name of the open screen, or null when none is open. */
+	private static String currentScreen(ClientGameTestContext context) {
+		return context.computeOnClient(client -> client.gui.screen() == null ? null : client.gui.screen().getClass().getName());
 	}
 
 	private static ServerPlayer player(MinecraftServer server) {
