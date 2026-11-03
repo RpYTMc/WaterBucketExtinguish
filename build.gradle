@@ -124,15 +124,30 @@ static String listingDescription(File readme) {
 	return text.trim() + "\n"
 }
 
+// CurseForge's Markdown has no iframes, <kbd> or <details>: it shows them as
+// text. Its copy uses a linked video thumbnail, code spans and an unfolded table.
+static String curseforgeDescription(String listing) {
+	def text = listing
+	text = text.replaceAll(/<iframe[^>]*src="https:\/\/www\.youtube-nocookie\.com\/embed\/([A-Za-z0-9_-]+)"[^>]*><\/iframe>/,
+			'[![Watch the demo video on YouTube](https://img.youtube.com/vi/$1/maxresdefault.jpg)](https://youtu.be/$1)')
+	text = text.replaceAll(/<kbd>(.*?)<\/kbd>/, '`$1`')
+	text = text.replaceAll(/(?s)<details>\s*<summary>.*?<\/summary>\s*\n/, "")
+	text = text.replaceAll(/\n?<\/details>\n/, "")
+	return text
+}
+
 tasks.register("listingDescription") {
 	group = "publishing"
-	description = "Writes the store description made from README.md to build/listing-description.md, for pasting into CurseForge."
+	description = "Writes the store descriptions made from README.md: build/listing-description.md (what Modrinth gets) and build/curseforge-description.md (paste into CurseForge in Markdown mode)."
 	def readme = file("README.md")
-	def output = layout.buildDirectory.file("listing-description.md")
+	def modrinthOutput = layout.buildDirectory.file("listing-description.md")
+	def curseforgeOutput = layout.buildDirectory.file("curseforge-description.md")
 	inputs.file(readme)
-	outputs.file(output)
+	outputs.files(modrinthOutput, curseforgeOutput)
 	doLast {
-		output.get().asFile.setText(listingDescription(readme), "UTF-8")
+		def listing = listingDescription(readme)
+		modrinthOutput.get().asFile.setText(listing, "UTF-8")
+		curseforgeOutput.get().asFile.setText(curseforgeDescription(listing), "UTF-8")
 	}
 }
 

@@ -66,4 +66,4 @@ Each release also replaces the Modrinth description with `README.md`, adjusted f
 - Everything between `<!-- github-only -->` and `<!-- /github-only -->` is left out. That is the header and the video thumbnail, because Modrinth shows its own title, icon and buttons.
 - Text inside a `<!-- listing-only ... -->` comment is shown only on the store page. That is the embedded video player, which GitHub can't show.
 
-CurseForge has no API for descriptions. Run `./gradlew listingDescription` and paste `build/listing-description.md` into the CurseForge description by hand.
+CurseForge has no API for descriptions. Run `./gradlew listingDescription`, switch the CurseForge description editor from WYSIWYG to Markdown, and paste `build/curseforge-description.md`. That copy swaps the video player, the key labels and the folded command list for plain Markdown, because CurseForge shows those as raw text.
