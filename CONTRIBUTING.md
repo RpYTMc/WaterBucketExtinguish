@@ -11,8 +11,8 @@ There is one branch per Minecraft version, named `mc/` plus the Minecraft versio
 | `mc/26.3` | 26.3 | 25 | Mojang names. Has the in-game test |
 | `mc/26.2` | 26.2 | 25 | Mojang names. Has the in-game test |
 | `mc/26.1` | 26.1, 26.1.1, 26.1.2 | 25 | Mojang names, no remapping (26.1 is unobfuscated). Has the in-game test |
-| `mc/1.21.11` | 1.21.11 | 21 | Yarn names |
-| `mc/1.20.1` | 1.20.1 | 17 | Yarn names |
+| `mc/1.21.11` | 1.21.11 | 21 | Yarn names. Has the in-game test |
+| `mc/1.20.1` | 1.20.1 | 17 | Yarn names. No in-game test, test by hand |
 
 The default branch on GitHub is the newest Minecraft version. A fix goes to every branch that still gets updates. `README.md`, `CONTRIBUTING.md` and `LICENSE` are the same on every branch, so copy changes to all of them.
 
@@ -26,13 +26,15 @@ The jar lands in `build/libs/`. Gradle has to run on a JDK at least as new as th
 
 ## In-game test
 
-On `mc/26.1` and newer branches:
+On `mc/1.21.11` and every 26.x branch:
 
 ```bash
 ./gradlew runClientGameTest
 ```
 
 It opens a real game window, creates a world and plays the fire, refill and cobweb cases, then checks the commands, the HUD and the settings screen. It takes about a minute. Screenshots are saved to `build/run/clientGameTest/screenshots/`.
+
+`mc/1.20.1` can't have it: Fabric API for 1.20.1 has no client test module. Test that version by hand in a 1.20.1 instance: fire, cobweb, refill, the HUD, `/waterbucket help`, and joining a server without getting kicked.
 
 ## Porting to a new Minecraft version
 
