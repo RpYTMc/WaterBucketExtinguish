@@ -141,11 +141,11 @@ static String listingDescription(File readme) {
 }
 
 // CurseForge's Markdown has no iframes, <kbd> or <details>: it shows them as
-// text. Its copy uses a linked video thumbnail, code spans and an unfolded table.
+// text. Its copy drops the video (CurseForge already shows the project's video
+// above the description) and uses code spans and an unfolded command table.
 static String curseforgeDescription(String listing) {
 	def text = listing
-	text = text.replaceAll(/<iframe[^>]*src="https:\/\/www\.youtube-nocookie\.com\/embed\/([A-Za-z0-9_-]+)"[^>]*><\/iframe>/,
-			'[![Watch the demo video on YouTube](https://img.youtube.com/vi/$1/maxresdefault.jpg)](https://youtu.be/$1)')
+	text = text.replaceAll(/<iframe[^>]*><\/iframe>\n*/, "")
 	text = text.replaceAll(/<kbd>(.*?)<\/kbd>/, '`$1`')
 	text = text.replaceAll(/(?s)<details>\s*<summary>.*?<\/summary>\s*\n/, "")
 	text = text.replaceAll(/\n?<\/details>\n/, "")
