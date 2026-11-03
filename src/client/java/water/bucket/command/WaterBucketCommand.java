@@ -9,7 +9,6 @@ import com.mojang.brigadier.context.CommandContext;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.item.Items;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -184,31 +183,17 @@ public class WaterBucketCommand {
 
     private static int showBucketStatus(CommandContext<FabricClientCommandSource> ctx) {
 
-        var player = ctx.getSource().getPlayer();
-
-        int hotbarSlot = HotbarUtils.findBucketSlot(player);
-
-        boolean hasHotbar = hotbarSlot != -1;
-        boolean hasInventory = false;
-
-        for (int i = 0; i < player.getInventory().size(); i++) {
-            var stack = player.getInventory().getStack(i);
-            if (stack.isOf(Items.WATER_BUCKET) || stack.isOf(Items.BUCKET)) {
-                hasInventory = true;
-                break;
-            }
-        }
-
-        if (hasHotbar) {
-            panel(ctx, Text.literal("✔ Bucket Ready")
-                    .formatted(Formatting.GREEN));
-        } else if (hasInventory) {
-            panel(ctx, Text.literal("⚠ Bucket in Inventory")
-                    .formatted(Formatting.YELLOW));
-        } else {
-            panel(ctx, Text.literal("✖ No Bucket Found")
-                    .formatted(Formatting.RED));
-        }
+        Text message = switch (HotbarUtils.status(ctx.getSource().getPlayer())) {
+            case READY -> Text.literal("✔ Bucket Ready")
+                    .formatted(Formatting.GREEN);
+            case EMPTY -> Text.literal("⚠ Only an empty bucket in your hotbar")
+                    .formatted(Formatting.GOLD);
+            case INVENTORY -> Text.literal("⚠ Bucket in Inventory")
+                    .formatted(Formatting.YELLOW);
+            case NONE -> Text.literal("✖ No Bucket Found")
+                    .formatted(Formatting.RED);
+        };
+        panel(ctx, message);
 
         return 1;
     }

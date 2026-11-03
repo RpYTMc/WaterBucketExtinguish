@@ -2,7 +2,6 @@ package water.bucket.hud;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.Items;
 
 import water.bucket.config.ModConfig;
 import water.bucket.util.HotbarUtils;
@@ -24,30 +23,20 @@ public class HudRenderer {
             if (client.options.hudHidden) return;
             if (client.getDebugHud().shouldShowDebugHud()) return;
 
-            boolean hasHotbarBucket = HotbarUtils.findBucketSlot(client.player) != -1;
-            boolean hasInventoryBucket = false;
+            HotbarUtils.BucketStatus status = HotbarUtils.status(client.player);
 
-            for (int i = 0; i < client.player.getInventory().size(); i++) {
-                var stack = client.player.getInventory().getStack(i);
-                if (stack.isOf(Items.WATER_BUCKET) || stack.isOf(Items.BUCKET)) {
-                    hasInventoryBucket = true;
-                    break;
-                }
-            }
-
-            String statusText;
-            int statusColor;
-
-            if (hasHotbarBucket) {
-                statusText = "✔ Bucket Ready";
-                statusColor = 0xFF55FF55;
-            } else if (hasInventoryBucket) {
-                statusText = "⚠ Bucket in Inventory";
-                statusColor = 0xFFFFFF55;
-            } else {
-                statusText = "✖ No Bucket";
-                statusColor = 0xFFFF5555;
-            }
+            String statusText = switch (status) {
+                case READY -> "✔ Bucket Ready";
+                case EMPTY -> "⚠ Bucket Empty";
+                case INVENTORY -> "⚠ Bucket in Inventory";
+                case NONE -> "✖ No Bucket";
+            };
+            int statusColor = switch (status) {
+                case READY -> 0xFF55FF55;
+                case EMPTY -> 0xFFFFAA00;
+                case INVENTORY -> 0xFFFFFF55;
+                case NONE -> 0xFFFF5555;
+            };
 
             int screenWidth = client.getWindow().getScaledWidth();
             int screenHeight = client.getWindow().getScaledHeight();

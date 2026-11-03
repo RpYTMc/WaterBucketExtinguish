@@ -10,6 +10,32 @@ public class HotbarUtils {
 
     private static final int HOTBAR_SIZE = 9;
 
+    /** What the bucket HUD and {@code /waterbucket bucket} report. */
+    public enum BucketStatus {
+        /** A water bucket is in the hotbar. */
+        READY,
+        /** No water bucket in the hotbar, but an empty one: it can refill, not put out fire. */
+        EMPTY,
+        /** No bucket in the hotbar, but a water or empty bucket elsewhere in the inventory. */
+        INVENTORY,
+        /** No bucket at all. */
+        NONE
+    }
+
+    public static BucketStatus status(PlayerEntity player) {
+        if (findWaterBucketSlot(player) != -1) return BucketStatus.READY;
+        if (findEmptyBucketSlot(player) != -1) return BucketStatus.EMPTY;
+
+        var inventory = player.getInventory();
+        for (int i = 0; i < inventory.size(); i++) {
+            var stack = inventory.getStack(i);
+            if (stack.isOf(Items.WATER_BUCKET) || stack.isOf(Items.BUCKET)) {
+                return BucketStatus.INVENTORY;
+            }
+        }
+        return BucketStatus.NONE;
+    }
+
     /** First hotbar slot with any bucket (water preferred), or -1. */
     public static int findBucketSlot(PlayerEntity player) {
         int water = findWaterBucketSlot(player);
