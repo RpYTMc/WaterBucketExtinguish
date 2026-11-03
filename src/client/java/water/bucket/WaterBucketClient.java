@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -101,7 +102,7 @@ public class WaterBucketClient implements ClientModInitializer {
 		if (failHintCooldown > 0) failHintCooldown--;
 
 		while (configKey.consumeClick()) {
-			client.setScreen(ModConfigScreen.create(client.screen));
+			openSettings(client);
 		}
 
 		while (panicKey.consumeClick()) {
@@ -201,6 +202,20 @@ public class WaterBucketClient implements ClientModInitializer {
 		placedThisTick = false;
 		pickupTimer = 0;
 		previousSlot = -1;
+	}
+
+	/**
+	 * The settings screen is built with Cloth Config, which is optional. Without it the
+	 * key says where the settings are instead. ModConfigScreen is the only class that
+	 * uses Cloth Config, and it is only reached when Cloth Config is loaded.
+	 */
+	private static void openSettings(Minecraft client) {
+		if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
+			client.setScreen(ModConfigScreen.create(client.screen));
+		} else {
+			client.player.sendSystemMessage(Component.literal("Install Cloth Config to open the settings screen, or use /waterbucket config.")
+					.withStyle(ChatFormatting.YELLOW));
+		}
 	}
 
 	// ------------------------------------------------------------------

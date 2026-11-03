@@ -49,7 +49,7 @@ Download the file whose name ends with your Minecraft version:
 | 1.21.11 | `+mc1.21.11.jar` | 21 |
 | 1.20.1 | `+mc1.20.1.jar` | 17 |
 
-Every version needs [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrinth.com/mod/fabric-api) and [Cloth Config](https://modrinth.com/mod/cloth-config). [Mod Menu](https://modrinth.com/mod/modmenu) is optional and adds a settings button to the mod list. The official Minecraft launcher already comes with the right Java.
+Every version needs [Fabric Loader](https://fabricmc.net/use/) and [Fabric API](https://modrinth.com/mod/fabric-api). [Cloth Config](https://modrinth.com/mod/cloth-config) adds the settings screen and [Mod Menu](https://modrinth.com/mod/modmenu) adds a settings button to the mod list; both are optional. The official Minecraft launcher already comes with the right Java.
 
 ## How to use it
 
@@ -61,7 +61,7 @@ Press <kbd>]</kbd>. What it does depends on the situation:
 | Stuck in a cobweb | Places water to wash the cobweb away. Press again to pick the water back up |
 | Not on fire, with an empty bucket in the hotbar | Fills the empty bucket from the water you are looking at |
 
-Press <kbd>P</kbd> to open the settings. You can change both keys in Options, Controls, Key Binds.
+Press <kbd>P</kbd> to open the settings (needs Cloth Config). You can change both keys in Options, Controls, Key Binds.
 
 The bucket has to be in your hotbar. With a full and an empty bucket there, the mod uses the right one for the job. If the key can't do anything, a short message tells you why, for example "Look down to place water" or "No bucket in hotbar". By default the key does nothing in the Nether, where water can't be placed anyway.
 
@@ -76,6 +76,7 @@ A small label in a corner of the screen shows whether a bucket is ready:
 | HUD | Meaning |
 |---|---|
 | <img src="https://cdn.modrinth.com/data/cached_images/a95c89823bb1640213a3a8c1bde4568c1f8a0acf.png" alt="Bucket Ready" /> | A bucket is in your hotbar |
+| ⚠ Bucket Empty | Only an empty bucket is in your hotbar: it can refill, but it can't put out fire |
 | <img src="https://cdn.modrinth.com/data/cached_images/8719112b74f42e1cbade2ad3afdf9e956f8cdc98.png" alt="Bucket in Inventory" /> | A bucket is in your inventory, move it to the hotbar |
 | <img src="https://cdn.modrinth.com/data/cached_images/562d7218e8e9608ceca7173ac281de7ea0788a08.png" alt="No Bucket" /> | You have no bucket |
 
