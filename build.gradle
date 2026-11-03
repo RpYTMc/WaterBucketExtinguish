@@ -33,6 +33,18 @@ loom {
 
 }
 
+fabricApi {
+	// In-game test: ./gradlew runClientGameTest starts a real client, creates a
+	// singleplayer world and drives the panic key (src/gametest).
+	configureTests {
+		createSourceSet = true
+		modId = "waterbucket-test"
+		enableGameTests = false
+		enableClientGameTests = true
+		eula = true
+	}
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
