@@ -58,6 +58,9 @@ dependencies {
 		api "com.terraformersmc:modmenu:${project.modmenu_version}"
 	}
 
+	// Cloth Config builds the settings screen (ModConfigScreen). Players don't need it,
+	// fabric.mod.json only suggests it; it is here so the screen compiles and the dev
+	// client has it.
 	api("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
@@ -187,7 +190,7 @@ publishMods {
 		environment = CLIENT_ONLY
 		projectDescription = providers.provider { listingDescription(file("README.md")) }
 		requires("fabric-api")
-		requires("cloth-config")
+		optional("cloth-config")
 		optional("modmenu")
 	}
 
@@ -201,7 +204,7 @@ publishMods {
 		client = true
 		server = false
 		requires("fabric-api")
-		requires("cloth-config")
+		optional("cloth-config")
 		optional("modmenu")
 	}
 

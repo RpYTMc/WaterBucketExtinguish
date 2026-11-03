@@ -11,7 +11,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.item.Items;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -183,31 +182,17 @@ public class WaterBucketCommand {
 
     private static int showBucketStatus(CommandContext<FabricClientCommandSource> ctx) {
 
-        var player = ctx.getSource().getPlayer();
-
-        int hotbarSlot = HotbarUtils.findBucketSlot(player);
-
-        boolean hasHotbar = hotbarSlot != -1;
-        boolean hasInventory = false;
-
-        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            var stack = player.getInventory().getItem(i);
-            if (stack.is(Items.WATER_BUCKET) || stack.is(Items.BUCKET)) {
-                hasInventory = true;
-                break;
-            }
-        }
-
-        if (hasHotbar) {
-            panel(ctx, Component.literal("✔ Bucket Ready")
-                    .withStyle(ChatFormatting.GREEN));
-        } else if (hasInventory) {
-            panel(ctx, Component.literal("⚠ Bucket in Inventory")
-                    .withStyle(ChatFormatting.YELLOW));
-        } else {
-            panel(ctx, Component.literal("✖ No Bucket Found")
-                    .withStyle(ChatFormatting.RED));
-        }
+        Component message = switch (HotbarUtils.status(ctx.getSource().getPlayer())) {
+            case READY -> Component.literal("✔ Bucket Ready")
+                    .withStyle(ChatFormatting.GREEN);
+            case EMPTY -> Component.literal("⚠ Only an empty bucket in your hotbar")
+                    .withStyle(ChatFormatting.GOLD);
+            case INVENTORY -> Component.literal("⚠ Bucket in Inventory")
+                    .withStyle(ChatFormatting.YELLOW);
+            case NONE -> Component.literal("✖ No Bucket Found")
+                    .withStyle(ChatFormatting.RED);
+        };
+        panel(ctx, message);
 
         return 1;
     }
